@@ -1,0 +1,218 @@
+import { Socket,Server } from "socket.io";
+import Team from "../models/Team";
+import User from "../models/User";
+
+
+
+const onlineUsers = new Map<string,string>();
+
+
+async function getAllTeams() {
+  return Team.find().populate("members", "name");
+}
+
+
+
+export function setupPresence(io:Server) {
+  io.on("connection", async(socket : Socket) => {
+    console.log("Socket connected:", socket.id);
+
+    const handshakeuser=socket.handshake.auth.user;
+    if(!handshakeuser) return;
+    console.log("handshake user is : ",handshakeuser);
+    const userId=handshakeuser.id;
+
+    console.log("user connected with id",userId);
+    // const useronce=await User.findById(userId);
+    // const name=useronce?.name;
+    
+    
+    socket.on("user-online", (userId : string) => {
+      onlineUsers.set(userId, socket.id);
+      io.emit("online-users", [...onlineUsers.keys()]);
+    });
+    
+    socket.on("ping-test",(data)=>{
+      console.log("pingdata is ",data);
+    })
+    
+    socket.on("create-team",async ({name,sport,location,maxPlayers})=>{
+      console.log("the user tryng to create team is ",userId);
+      const user=await User.findById(userId);
+      if(!user) return;
+      if(user.currentTeam){
+        socket.emit("team-error",{message:"User already in a team"})
+        return;
+      }
+      
+      if (
+        typeof maxPlayers !== "number" ||
+        maxPlayers <= 0
+      ) {
+        socket.emit("team-error", {
+          message: "Invalid maxPlayers",
+        });
+        return;
+      }
+      const team=await Team.create({
+        name:name,
+        sport:sport,
+        location:location,
+        maxPlayers:maxPlayers,
+        members:[userId],
+        status:"OPEN"
+      })
+
+      user.currentTeam=team._id;
+      const teamid=team._id.toString();
+      console.log("creating team",teamid);
+      
+      socket.join(teamid);
+      socket.emit("get-team-id",team._id);
+      await user.save();
+      io.emit("teams-updated",await getAllTeams())
+    })
+    
+    
+    
+    socket.on("join-team", async (teamId) => {
+      const user=await User.findById(userId);
+      if(!user) return;
+      
+      if(user.currentTeam){
+        if(user.currentTeam===teamId){
+          return;
+        }
+        socket.emit("team-error",{message:"User already in a team:("});
+        return;
+      }
+
+      console.log("join team on the server side",teamId);
+      const team = await Team.findById(teamId);
+      console.log("team is",team);
+      if (!team) {
+        socket.emit("team-error", { message: "Team not found" });
+      return;
+    }
+    
+    if (team.members.length >= team.maxPlayers) {
+      socket.emit("team-error", { message: "Team is full" });
+      return;
+    }
+    
+
+    if(team.members.includes(userId)){
+      console.log("user is already in the team");
+      return;
+    }
+    if(!team.members.includes(userId)) {
+      console.log("user trying to join is ",userId);
+      team.members.push(userId);
+    }
+    
+    if (team.members.length === team.maxPlayers) {
+      team.status = "FULL";
+    }
+    
+    await team.save();
+    user.currentTeam=teamId
+    await user.save();
+    console.log("joining room",teamId.toString());
+    socket.join(teamId.toString());
+    io.to(teamId.toString()).emit("user-joined-room",userId);
+    io.emit("teams-updated", await getAllTeams());
+  });
+
+  socket.on("exit-team",async(teamid)=>{
+    const user=await User.findById(userId);
+    const team=await Team.findById(teamid);
+    if(!user || !team){
+      socket.emit("team-error",{message:"user not present"});
+      return;
+    }
+    team.members=team.members.filter((id)=>{
+      if(!id) return false;
+      return !id.equals(userId);
+    })
+    if(team.members.length===0){
+        await Team.findByIdAndDelete(teamid);
+    }
+    else{
+      await team.save();
+    }
+    user.currentTeam=null;
+    await user.save();
+    socket.leave(teamid.toString());
+    io.emit("teams-updated",await getAllTeams());
+  })
+
+  socket.on("rejoin-team", (teamId) => {
+    socket.join(teamId.toString());
+  });
+
+
+  socket.on("send-message",(teamid,message)=>{
+    if (!socket.rooms.has(teamid.toString())) return;
+
+    io.to(teamid).emit("receive-message", {
+      userId: userId,
+      message,
+      time: Date.now(),
+      name:handshakeuser.name
+    });
+  })
+
+
+  
+  
+  const teams=await getAllTeams();
+  socket.emit("teams-updated",teams);
+  
+  socket.on("disconnect", async() => {
+    console.log("disconnected:(");
+    for (let [userId, socketId] of onlineUsers) {
+        if (socketId === socket.id) {
+          onlineUsers.delete(userId);
+          break;
+        }
+      }
+      
+      
+      
+      setTimeout(async()=>{
+        console.log("after waiting for 10 sec");
+        if(!onlineUsers.has(userId)){
+                  const user=await User.findById(userId);
+                  console.log("removing user after waiting for 10 sec");
+                  if(user?.currentTeam){
+                    const teamid=user.currentTeam;
+                    const team=await Team.findById(user.currentTeam);
+
+                    if(!user || !team){
+                      socket.emit("team-error",{message:"user not present"});
+                      return;
+                    }
+                    team.members=team.members.filter((id)=>{
+                      if(!id) return false;
+                      return !id.equals(userId);
+                    })
+                    if(team.members.length===0){
+                        await Team.findByIdAndDelete(teamid);
+                    }
+                    else{
+                      await team.save();
+                    }
+                    user.currentTeam=null;
+                    await user.save();
+                    socket.leave(teamid.toString());
+                    io.emit("teams-updated",await getAllTeams());
+          }
+        }
+      },10000);
+
+      
+      
+      io.emit("online-users", [...onlineUsers.keys()]);
+    });
+  });
+}
