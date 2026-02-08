@@ -10,7 +10,11 @@ interface userT{
   name:string;
   id:string;
   sport:string;
-  location:string;
+  location?:{
+    lat:number;
+    lng:number;
+  };
+  area:string;
 }
 
 interface Authprops{
@@ -27,7 +31,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     name:"",
     id:"",
     sport:"",
-    location:""
+    location:undefined,
+    area:""
   });
   const [currentTeam,setCurrentTeam] = useState<string>("");
 

@@ -2,7 +2,11 @@ export interface Player {
   _id: string;
   name: string;
   sport: 'cricket' | 'football';
-  location: string;
+  location: {
+    lat:number;
+    lng:number;
+  };
+  area:string;
   role: string;
   available: string;
   contact: string;
@@ -17,7 +21,11 @@ export interface Team {
         _id: string,
         name:string
         sport: string,
-        location: string,
+        location: {
+          lat:number;
+          lng:number;
+        };
+        area:string;
         members: Member[],
         createdBy:string,
         status:string,
@@ -28,7 +36,11 @@ export interface Venue {
   _id: string;
   name: string;
   sport: 'cricket' | 'football' | 'both';
-  location: string;
+  location: {
+    lat:number;
+    lng:number;
+  };
+  area:string;
   type: string;
   availability: string;
   contact: string;
@@ -40,7 +52,11 @@ export type SportFilter = 'all' | 'cricket' | 'football';
 export interface NewEntry {
         name:string
         sport: string,
-        location: string,
+        area: string,
+        location: {
+          lat:number;
+          lng:number;
+        };
         members: Member[],
         createdBy:string,
         status:string,

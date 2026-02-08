@@ -32,7 +32,7 @@ export default function TeamDetails({ teams }:TeamDetailsProps) {
     <div className="text-white space-y-4">
       <h1 className="text-2xl font-bold">{team.name}</h1>
       <p>Sport: {team.sport}</p>
-      <p>Location: {team.location}</p>
+      <p>Location: {team.area}</p>
       <p>Max Players: {team.maxPlayers}</p>
 
       <div>

@@ -39,10 +39,9 @@ export default function Signup(){
             setUser({
               name:data.user.name,
               id:data.user.id,
-              sport:data.user.sport,
-              location:data.user.location
+              sport:data.user.sport
             });
-            navigate("/mainpage");
+            navigate("/set-location");
 
         }catch(err){
             console.log("cant login in",err);

@@ -4,6 +4,10 @@ import { Users, MapPin, Plus, Menu, X } from 'lucide-react';
 import { useEffect } from 'react';
 import {socket} from "../socket/socket"
 import { useAuth } from '../Auth/AuthProvider';
+import MapView from './MapView';
+import VenueMarkers from './VenueMarkers';
+import { dummyVenues } from '../data/locations';
+import { NavLink ,Link} from 'react-router-dom';
 
 type CardItem = Player | Team | Venue;
 
@@ -46,6 +50,7 @@ export default function CardGrid({ items,noofuser,onlineUsers,onAddClick,type,jo
     <div>
       <div className='flex align-middle justify-center text-6xl p-4'>
       <h1>Users Online: {noofuser}</h1>
+      <Link to="map">View on Map</Link>
       <div>
         {
           type==="team" && 
@@ -70,6 +75,7 @@ export default function CardGrid({ items,noofuser,onlineUsers,onAddClick,type,jo
                 exitteamhandler={exitteamhandler} />
       })}
     </div>
+    
 </div>
   );
 }

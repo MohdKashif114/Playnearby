@@ -56,7 +56,7 @@ export default function Card({ item ,online,jointeamhandler,usersteam,exitteamha
       <div className="space-y-2 text-gray-300">
         <div className="flex items-center gap-2">
           <MapPin className="w-4 h-4 text-gray-400" />
-          <span>{item.location}</span>
+          <span>{item.area}</span>
         </div>
 
         {isPlayer(item) && (

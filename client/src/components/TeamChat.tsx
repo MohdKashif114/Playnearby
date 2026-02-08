@@ -19,6 +19,36 @@ export default function TeamChat() {
     { id: "1", sender: "Rahul", text: "Hey team 👋",name:"Raul" },
     { id: "2", sender: user.id, text: "Ready to play today?",name:"You"},
   ]);
+
+useEffect(()=>{
+  const fetchmessage=async()=>{
+    try{
+      const res=await fetch(`http://localhost:5000/messages/${teamId}`,{
+        credentials:"include"
+      })
+  
+      const data=await res.json();
+      console.log(data);
+      setMessages(
+        data.map((m: any) => ({
+          id: m._id,
+          sender: m.sender,
+          text: m.text,
+          name: m.name,
+      }))
+    );
+
+    }catch(err){
+      console.log("some error occured while fetching messages",err);
+    }
+  }
+
+  fetchmessage();
+
+
+},[teamId]);
+
+
   const sendMessage = () => {
     if (!message.trim()) return;
     console.log("Sending message:",message);

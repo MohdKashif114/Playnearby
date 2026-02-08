@@ -2,6 +2,7 @@
 
 import './App.css'
 import SportsFinderApp from './components/SportsFinderApp'
+import SetLocation from './components/SetLocation';
 
 import { useState,useEffect } from 'react';
 import {socket} from "./socket/socket"
@@ -12,6 +13,8 @@ import Signup from "./components/Signup"
 import Login from './components/Login';
 import { AuthProvider, useAuth } from './Auth/AuthProvider';
 import ProtectedRoute from "./routes/ProtectedRoute"
+import 'leaflet/dist/leaflet.css';
+
 
 
 
@@ -46,11 +49,12 @@ function App() {
                   name:data.name,
                   id:data._id,
                   sport:data.sport,
-                  location:data.location
+                  location:data.location,
+                  area:data.area
                 });
                 console.log("current team is ",data.currentTeam);
                 setCurrentTeam(data.currentTeam);
-                navigate("/mainpage");
+                // navigate("/mainpage");
                 
               } catch {
                 setUser({});
@@ -173,7 +177,14 @@ function App() {
               </ProtectedRoute>
             }
           />
-
+          <Route path='/set-location'
+            element={
+              <ProtectedRoute>
+                  <SetLocation/>
+              </ProtectedRoute>
+            }
+          />
+          
           <Route path='/login' element={<Login/>}></Route>
           <Route path='/signup' element={<Signup/>}></Route>
       </Routes>

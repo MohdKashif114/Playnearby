@@ -1,6 +1,7 @@
 import { Bell, User, LogOut, LogIn } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../Auth/AuthProvider';
+import MapView from './MapView';
 
 interface NavbarProps {
   title?: string;
@@ -63,6 +64,7 @@ export default function Navbar({
             </button>
           </div>
         )}
+    
       </div>
     </div>
   );

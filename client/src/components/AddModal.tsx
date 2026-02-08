@@ -77,7 +77,7 @@ export default function AddModal({
           </select>
 
           {/* Location */}
-          <select
+          {/* <select
             value={newEntry.location}
             onChange={(e) =>
               setNewEntry({ ...newEntry, location: e.target.value })
@@ -90,7 +90,7 @@ export default function AddModal({
                 {loc}
               </option>
             ))}
-          </select>
+          </select> */}
 
           
 

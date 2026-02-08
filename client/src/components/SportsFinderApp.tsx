@@ -8,7 +8,7 @@ import {socket} from "../socket/socket"
 import { Routes, Route, Navigate } from "react-router-dom";
 import TeamDetails from './TeamDetails';
 import TeamChat from './TeamChat';
-
+import OnMap from './OnMap';
 
 
 
@@ -49,7 +49,11 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
       _id: "1",
       name: 'Rahul Sharma',
       sport: 'cricket',
-      location: 'Sigra',
+      area: 'Sigra',
+      location:{
+        lat:0,
+        lng:0
+      },
       role: 'Batsman',
       available: 'Weekends',
       contact: '9876543210',
@@ -58,7 +62,11 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
       _id: "2",
       name: 'Amit Kumar',
       sport: 'football',
-      location: 'Lanka',
+      area: 'Sigra',
+      location:{
+        lat:0,
+        lng:0
+      },
       role: 'Striker',
       available: 'Evenings',
       contact: '9876543211',
@@ -74,7 +82,11 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
       _id: "1",
       name: 'Sigra Ground',
       sport: 'both',
-      location: 'Sigra',
+      location:{
+        lat:1,
+        lng:1,
+      },
+      area:"unknown",
       type: 'Open Ground',
       availability: 'Daily 6am-8pm',
       contact: 'Free to play',
@@ -100,7 +112,11 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
   const [newEntry, setNewEntry] = useState<NewEntry>({
     name: '',
     sport: 'cricket',
-    location: '',
+    location:{
+      lat:0,
+      lng:0
+    },
+    area:"",
     members:[],
     createdBy:"",
     status:"",
@@ -125,7 +141,7 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
         item.sport === 'both';
 
       const matchesLocation =
-        selectedLocation === 'all' || item.location === selectedLocation;
+        selectedLocation === 'all';
 
       
 
@@ -144,7 +160,11 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
         _id: "2",
         name: newEntry.name,
         sport: newEntry.sport,
-        location: newEntry.location,
+        area: newEntry.area,
+        location:{
+          lat:newEntry.location.lat,
+          lng:newEntry.location.lng
+        },
         members: newEntry.members,
         createdBy:newEntry.createdBy,
         status:newEntry.status,
@@ -161,7 +181,11 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
     setNewEntry({
         name: '',
         sport: '',
-        location: '',
+        location:{
+          lat:0,
+          lng:0
+        },
+        area:"",
         members: [],
         createdBy:'',
         status:'',
@@ -261,22 +285,20 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
         <div className="flex-1 overflow-y-auto p-6">
               <Routes>
                 <Route path="/" element={<Navigate to="players" replace />} />
-
-                <Route
-                  path="players"
-                  element={
-                    <CardGrid
-                      items={players}
-                      noofuser={noofuser}
-                      onlineUsers={onlineUsers}
-                      onAddClick={() => setShowAddModal(true)}
-                      type="player"
-                      jointeamhandler={jointeamhandler}
-                      exitteamhandler={exitteamhandler}
-                      
-                    />
-                  }
-                />
+                  <Route path="players" >
+                    <Route index element={
+                        <CardGrid
+                          items={players}
+                          noofuser={noofuser}
+                          onlineUsers={onlineUsers}
+                          onAddClick={() => setShowAddModal(true)}
+                          type="player"
+                          jointeamhandler={jointeamhandler}
+                          exitteamhandler={exitteamhandler}
+                        />
+                      } />
+                    <Route path="map" element={<OnMap items={players} onlineUsers={onlineUsers} type={"player"}/>}/>
+                  </Route>
                 <Route path="teams">
 
                 <Route

@@ -9,7 +9,9 @@ import { setupPresence } from "./sockets/connections";
 import cookieParser from "cookie-parser"
 import mainpageauthRoute from "./routes/mainpageauthRoute"
 import fetchRoutes from "./routes/fetchRoutes"
+import messageRoute from "./routes/messageRoute"
 import { instrument } from "@socket.io/admin-ui";
+import setlocationRoute from "./routes/setlocationRoute"
 
 
 dns.setServers(["1.1.1.1"]);
@@ -22,6 +24,7 @@ import authRoutes from "./routes/authRoutes"
 
 const app = express();
 const server=http.createServer(app);
+connectDB();
 
 //socket io needs a raw http server to connect
 export const io = new Server(server, {
@@ -60,11 +63,11 @@ app.use(passport.initialize());
 app.use("/auth", authRoutes);
 app.use(mainpageauthRoute)
 app.use(fetchRoutes);
+app.use("/messages",messageRoute);
+app.use(setlocationRoute)
 
 
 
-
-connectDB();
 
 app.get("/", (req, res) => {
   res.send("PlayNearby API is running");

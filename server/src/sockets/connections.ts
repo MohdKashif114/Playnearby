@@ -1,6 +1,7 @@
 import { Socket,Server } from "socket.io";
 import Team from "../models/Team";
 import User from "../models/User";
+import Message from "../models/Message";
 
 
 
@@ -151,15 +152,30 @@ export function setupPresence(io:Server) {
   });
 
 
-  socket.on("send-message",(teamid,message)=>{
+  socket.on("send-message",async(teamid,message)=>{
     if (!socket.rooms.has(teamid.toString())) return;
+    try{
 
-    io.to(teamid).emit("receive-message", {
-      userId: userId,
-      message,
-      time: Date.now(),
-      name:handshakeuser.name
-    });
+      io.to(teamid).emit("receive-message", {
+        userId: userId,
+        message,
+        time: Date.now(),
+        name:handshakeuser.name
+      });
+      
+        
+        const msg = await Message.create({
+          teamId:teamid,
+          sender: userId,
+          text:message,
+          name: handshakeuser.name,
+        });
+    }catch(err){
+      console.log("Cant save message",err);
+    }
+
+
+
   })
 
 
