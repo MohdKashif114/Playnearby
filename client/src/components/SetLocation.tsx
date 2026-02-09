@@ -4,7 +4,8 @@ import { useAuth } from "../Auth/AuthProvider";
 import type { LeafletMouseEvent } from 'leaflet';
 import LocationPicker from "./LocationPicker";
 import { useEffect } from "react";
-
+import type {Team} from "../types/index"
+import { useNavigate } from "react-router-dom";
 
 interface userT{
   name:string;
@@ -17,9 +18,14 @@ interface userT{
 }
 
 
+
 interface MapCentererProps {
   lat: number | null;
   lng: number | null;
+  
+}
+interface setlocationProp{
+  type:string;
 }
 
 function MapCenterer({ lat, lng }: MapCentererProps) {
@@ -39,8 +45,9 @@ function MapCenterer({ lat, lng }: MapCentererProps) {
 
 
 
-export default function SetLocation(){
-
+export default function SetLocation({type}:setlocationProp){
+  
+  const navigate=useNavigate();
     const {setUser,user}=useAuth();
     
 
@@ -70,6 +77,8 @@ const useCurrentLocation = () => {
 
 
 async function reverseGeocode(lat: number, lng: number): Promise<string> {
+
+
   const res = await fetch(
     `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`,
     {
@@ -130,6 +139,7 @@ const setlocationhandler=async()=>{
 
         const data = await res.json();
         console.log("The respose is",data.message)
+        navigate("/mainpage")
 
     }catch(err){
         console.log("Error setting location",err);
@@ -157,25 +167,30 @@ const setlocationhandler=async()=>{
                 <LocationPicker
                     onSelect={(lat, lng) => {
                         console.log("Setting locaiont to ",lat,"and",lng);
-                        setUser((prev:userT) =>
-                            prev
-                            ? {
-                                ...prev,
-                                location: { lat, lng },
-                                }
-                            : prev
-                        );
-                    }}
+                        
+                                setUser((prev:userT) =>
+                                prev
+                                ? {
+                                    ...prev,
+                                    location: { lat, lng },
+                                    }
+                                : prev
+                            );
+                        }
+                        
+                      }
                 />
-
-                {user?.location && (
-                    <Marker
+              {user?.location &&
+                typeof user.location.lat === "number" &&
+                typeof user.location.lng === "number" && (
+                  <Marker
                     position={[
-                        user.location.lat,
-                        user.location.lng,
+                      user.location.lat,
+                      user.location.lng,
                     ]}
-                    />
+                  />
                 )}
+
                 </MapContainer>
 
                 <button onClick={useCurrentLocation}>Use Current Location</button>

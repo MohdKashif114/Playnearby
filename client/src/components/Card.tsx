@@ -34,7 +34,7 @@ export default function Card({ item ,online,jointeamhandler,usersteam,exitteamha
     'members' in i && 'maxPlayers' in i;
 
   const isVenue = (i: CardItem): i is Venue =>
-    'type' in i && 'availability' in i;
+    'type' in i;
 
   return (
     <div className="bg-gray-800 rounded-lg shadow-lg p-6 hover:bg-gray-750 transition-colors border border-gray-700">
@@ -58,16 +58,17 @@ export default function Card({ item ,online,jointeamhandler,usersteam,exitteamha
           <MapPin className="w-4 h-4 text-gray-400" />
           <span>{item.area}</span>
         </div>
+        {!isPlayer(item) && <div className="flex items-center gap-2">
+          
+          <strong className='text-gray-400'>Sport:</strong><span>{item.sport}</span>
+        </div>}
 
         {isPlayer(item) && (
           <>
             <div>
               <strong className="text-gray-400">Role:</strong> {item.role}
             </div>
-            <div>
-              <strong className="text-gray-400">Available:</strong>{' '}
-              {item.available}
-            </div>
+            
           </>
         )}
 
@@ -96,10 +97,7 @@ export default function Card({ item ,online,jointeamhandler,usersteam,exitteamha
             <div>
               <strong className="text-gray-400">Type:</strong> {item.type}
             </div>
-            <div>
-              <strong className="text-gray-400">Availability:</strong>{' '}
-              {item.availability}
-            </div>
+            
           </>
         )}
 

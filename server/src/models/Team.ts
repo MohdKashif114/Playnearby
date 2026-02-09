@@ -22,11 +22,24 @@ const teamSchema = new mongoose.Schema({
     enum: ["OPEN", "FULL"],
     default: "OPEN",
   },
+  area:{
+      type:String,
+      default:"Unknown"
+    },
   location: {
-    type:String,
+      type: {
+        type: String,
+        enum: ["Point"],
+        
+      },
+      coordinates: {
+        type: [Number], // [longitude, latitude]
+        
+    }
   },
 });
 
+teamSchema.index({ location: "2dsphere" });
 
 
 

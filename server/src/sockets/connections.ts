@@ -9,7 +9,18 @@ const onlineUsers = new Map<string,string>();
 
 
 async function getAllTeams() {
-  return Team.find().populate("members", "name");
+  const teams= await Team.find().populate("members", "name").lean();
+  const formattedteams = teams.map(team => ({
+    ...team,
+    location: team.location?.coordinates
+        ? {
+            lat: team.location.coordinates[1], 
+            lng: team.location.coordinates[0], 
+        }
+        : null,
+    }));
+
+    return formattedteams;
 }
 
 
@@ -37,8 +48,10 @@ export function setupPresence(io:Server) {
       console.log("pingdata is ",data);
     })
     
-    socket.on("create-team",async ({name,sport,location,maxPlayers})=>{
-      console.log("the user tryng to create team is ",userId);
+    socket.on("create-team",async ({name,sport,location,maxPlayers,area})=>{
+
+      console.log("the user tryng to create team is ",userId,"locaiton is ",location);
+      const {lat,lng}=location
       const user=await User.findById(userId);
       if(!user) return;
       if(user.currentTeam){
@@ -58,7 +71,11 @@ export function setupPresence(io:Server) {
       const team=await Team.create({
         name:name,
         sport:sport,
-        location:location,
+        location: {
+          type: "Point",
+          coordinates: [lng, lat], 
+        },
+        area:area,
         maxPlayers:maxPlayers,
         members:[userId],
         status:"OPEN"

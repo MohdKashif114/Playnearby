@@ -58,7 +58,6 @@ const signupController = async (req: Request, res: Response) => {
         name: user.name,
         email: user.email,
         sport:user.sport,
-        location:user.location
       },
     });
 

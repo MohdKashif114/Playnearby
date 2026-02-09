@@ -12,17 +12,19 @@ interface Props {
 export default function VenueMarkers({ venues }: Props) {
   return (
     <>
-      {venues.map(v => (
+      {venues.map(v =>{
+        console.log(v);
+        return (
         <Marker
           key={v._id}
-          position={[v.location?.lat, v.location?.lng] as LatLngTuple}
+          position={[v.location?.lat??0, v.location?.lng??0] as LatLngTuple}
         >
           <Popup>
             <strong>{v.name}</strong><br />
             Sport: {v.sport}
           </Popup>
         </Marker>
-      ))}
+      )})}
     </>
   );
 }

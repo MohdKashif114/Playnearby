@@ -5,7 +5,7 @@ import CardGrid from './CardGrid';
 import AddModal from './AddModal';
 import Navbar from './Navbar';
 import {socket} from "../socket/socket"
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import TeamDetails from './TeamDetails';
 import TeamChat from './TeamChat';
 import OnMap from './OnMap';
@@ -42,7 +42,7 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
   const [showAddModal, setShowAddModal] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const {currentTeam,setCurrentTeam}=useAuth();
-  
+  const navigate=useNavigate();
   const [players, setPlayers] = useState<Player[]>([
     
     {
@@ -121,6 +121,7 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
     createdBy:"",
     status:"",
     maxPlayers:0,
+    type:""
   });
         
 
@@ -149,11 +150,47 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
     });
   };
 
-  const handleAddEntry = () => {
+    async function reverseGeocode(lat: number, lng: number): Promise<string> {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`,
+        {
+          headers: {
+            Referer: "http://localhost:5173/", // change in prod
+          },
+        }
+      );
+    
+      if (!res.ok) throw new Error("Reverse geocode failed");
+    
+      const data = await res.json();
+    
+      return (
+        data.address?.suburb ||
+        data.address?.neighbourhood ||
+        data.address?.city ||
+        data.address?.town ||
+        data.address?.state ||
+        "Unknown area"
+      );
+    }
+
+
+
+  const handleAddEntry = async() => {
     if (!newEntry.name || !newEntry.location) {
       alert('Please fill required fields');
       return;
     }
+
+    let areaName = "";
+        try {
+            areaName = await reverseGeocode(newEntry.location.lat, newEntry.location.lng);
+        } catch {
+            areaName = "Unknown area";
+        }
+
+        newEntry.area=areaName;
+
     console.log("the new team is ",newEntry);
     
       const entry: Team = {
@@ -162,8 +199,8 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
         sport: newEntry.sport,
         area: newEntry.area,
         location:{
-          lat:newEntry.location.lat,
-          lng:newEntry.location.lng
+          lat:newEntry.location?.lat,
+          lng:newEntry.location?.lng
         },
         members: newEntry.members,
         createdBy:newEntry.createdBy,
@@ -190,10 +227,41 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
         createdBy:'',
         status:'',
         maxPlayers:0,
+        type:""
     });
 
     setShowAddModal(false);
   };
+
+
+  const  handleVenueAddEntry=async()=>{
+        console.log("The new venue entry is ",newEntry);
+        let areaName=""
+        try{
+          areaName=await reverseGeocode(newEntry.location?.lat,newEntry.location?.lng)
+        }catch{
+          areaName="Unknown"
+        }
+        newEntry.area=areaName;
+        try{
+          const res=await fetch("http://localhost:5000/addvenue",{
+            credentials: "include",
+            method:"POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newEntry),
+            })
+            
+            if(!res.ok) throw new Error("Cant add Venue")
+
+
+
+        }catch(err){
+          console.log("some error occurred while adding venue",err);
+        }
+        setShowAddModal(false);
+  }
 
 
   useEffect(()=>{
@@ -217,8 +285,38 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
     }
     fetchplayers();
 
-
   },[]);
+
+  useEffect(() => {
+
+    const fetchVenues = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/fetchallvenues", {
+          credentials: "include",
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch venues");
+        }
+
+        const data = await res.json();
+        console.log("fetched venues are:", data);
+
+        if (data?.Venues) {
+          setVenues(data.Venues);
+        }
+
+      } catch (err) {
+        console.log("Cant fetch Venues", err);
+      }
+    };
+
+    fetchVenues();
+
+  }, []);
+
+
+
 
 
   const jointeamhandler=(teamid:string)=>{
@@ -315,6 +413,8 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
                     />
                   }
                 />
+                
+                <Route path="map" element={<OnMap items={teams} onlineUsers={onlineUsers} type={"team"}/>}/>
                 <Route path=":teamId">
                   <Route index element={<TeamDetails teams={teams} />} />
                   <Route path="chat" element={<TeamChat />} />
@@ -324,19 +424,23 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
 
                 <Route
                   path="venues"
-                  element={
-                    <CardGrid
-                      items={venues}
-                      noofuser={noofuser}
-                      onlineUsers={onlineUsers}
-                      onAddClick={() => setShowAddModal(true)}
-                      type="venue"
-                      jointeamhandler={jointeamhandler}
-                      exitteamhandler={exitteamhandler}
-                      
+                  
+                >
+                  <Route index 
+                        element={
+                            <CardGrid
+                            items={venues}
+                            noofuser={noofuser}
+                            onlineUsers={onlineUsers}
+                            onAddClick={() => setShowAddModal(true)}
+                            type="venue"
+                            jointeamhandler={jointeamhandler}
+                            exitteamhandler={exitteamhandler}
+                          />
+                        }
                     />
-                  }
-                />
+                    <Route path="map"  element={<OnMap items={venues} onlineUsers={onlineUsers} type={"venue"}/>} />
+                </Route>
               </Routes>
             </div>
 
@@ -344,10 +448,10 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
 
       {showAddModal && (
           <AddModal
-          activeTab={activeTab}
           newEntry={newEntry}
           setNewEntry={setNewEntry}
           onAdd={handleAddEntry}
+          onVenueAdd={handleVenueAddEntry}
           onClose={() => setShowAddModal(false)}
           />
         )}

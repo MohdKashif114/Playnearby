@@ -53,7 +53,7 @@ export default function CardGrid({ items,noofuser,onlineUsers,onAddClick,type,jo
       <Link to="map">View on Map</Link>
       <div>
         {
-          type==="team" && 
+          (type==="team" || type==="venue") && 
             <div className="p-3 border-t border-gray-700">
                 <button
                   onClick={onAddClick}

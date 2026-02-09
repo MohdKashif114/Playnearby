@@ -54,7 +54,7 @@ export default function Login(){
           sport:data.user.sport,
           location:data.user.location
         });
-        navigate("/mainpage");
+        navigate("/set-location");
 
     }catch(err){
         console.log("cant login in",err);

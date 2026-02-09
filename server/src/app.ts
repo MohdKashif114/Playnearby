@@ -12,6 +12,7 @@ import fetchRoutes from "./routes/fetchRoutes"
 import messageRoute from "./routes/messageRoute"
 import { instrument } from "@socket.io/admin-ui";
 import setlocationRoute from "./routes/setlocationRoute"
+import addvenuecontroller from "./controllers/addvenuecontroller";
 
 
 dns.setServers(["1.1.1.1"]);
@@ -21,6 +22,8 @@ import connectDB from "./config/db";
 import passport from "passport";
 import "./config/passport";
 import authRoutes from "./routes/authRoutes"
+import { authMiddleware } from "./middleware/authMiddleware";
+import { fetchAllVenues } from "./controllers/fetchvenuecontroller";
 
 const app = express();
 const server=http.createServer(app);
@@ -65,6 +68,8 @@ app.use(mainpageauthRoute)
 app.use(fetchRoutes);
 app.use("/messages",messageRoute);
 app.use(setlocationRoute)
+app.use("/addvenue",addvenuecontroller)
+app.use("/fetchallvenues",authMiddleware,fetchAllVenues)
 
 
 

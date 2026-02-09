@@ -180,7 +180,7 @@ function App() {
           <Route path='/set-location'
             element={
               <ProtectedRoute>
-                  <SetLocation/>
+                  <SetLocation type="Player"/>
               </ProtectedRoute>
             }
           />

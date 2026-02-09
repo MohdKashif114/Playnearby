@@ -37,11 +37,11 @@ export default function Sidebar({
 
       {/* Tabs */}
       <div className="flex-1 overflow-y-auto p-2 space-y-1">
-        <NavLink to="/mainpage/players">Players</NavLink>
+        <NavLink to="/mainpage/players" onClick={()=>setActiveTab("players")}>Players</NavLink>
 
-        <NavLink to="/mainpage/teams">Teams</NavLink>
+        <NavLink to="/mainpage/teams" onClick={()=>setActiveTab("teams")}>Teams</NavLink>
 
-        <NavLink to="/mainpage/venues">Venues</NavLink>
+        <NavLink to="/mainpage/venues" onClick={()=>setActiveTab("venues")}>Venues</NavLink>
       </div>
 
       {/* Add Button */}

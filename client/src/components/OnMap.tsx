@@ -19,6 +19,12 @@ export default function OnMap({items,onlineUsers,type}:CardGridProps){
                 {
                    type==="player" && <VenueMarkers venues={items.filter(item=> onlineUsers.has(item._id))}/>
                 }
+                {
+                    type==="team" && <VenueMarkers venues={items}/>
+                }
+                {
+                    type==="venue" && <VenueMarkers venues={items}/>
+                }
                 
             </MapView>
         </div>

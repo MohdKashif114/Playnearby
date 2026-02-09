@@ -61,5 +61,6 @@ export interface NewEntry {
         createdBy:string,
         status:string,
         maxPlayers:number,
+        type:string
 }
 

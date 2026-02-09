@@ -11,9 +11,18 @@ const router = express.Router();
 router.get("/authenticate", authMiddleware, async (req, res) => {
   const userId = (req.user as JwtPayload).id;
 
-  const user = await User.findById(userId);
+  const user = await User.findById(userId).select("-password -__v").lean();
   console.log(user);
-  res.json(user);
+  const updatedUser={
+    ...user,
+    location: user?.location?.coordinates
+        ? {
+            lat: user?.location.coordinates[1], 
+            lng: user?.location.coordinates[0], 
+        }
+        : null,
+  }
+  res.json(updatedUser);
 });
 
 
