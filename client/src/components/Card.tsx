@@ -24,7 +24,7 @@ interface CardProps {
 export default function Card({ item ,online,jointeamhandler,usersteam,exitteamhandler}: CardProps) {
 
 
-  const {currentTeam,setCurrentTeam}=useAuth();
+  const {currentTeam,setCurrentTeam,user,friends}=useAuth();
 
 
   const isPlayer = (i: CardItem): i is Player =>
@@ -35,6 +35,34 @@ export default function Card({ item ,online,jointeamhandler,usersteam,exitteamha
 
   const isVenue = (i: CardItem): i is Venue =>
     'type' in i;
+
+
+  const sendrequesthandler=async()=>{
+    const playerid=item._id;
+    const userid=user.id;
+    console.log("player id is ",playerid);
+    try{
+      const res=await fetch(`http://localhost:5000/send-request/${playerid}`,{
+            credentials: "include",
+            method:"POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+         })
+         if(!res.ok) throw new Error("Error while sending request");
+         const data=await res.json();
+         console.log(data.message);
+
+    }catch(err){
+      console.log("Cant send request",err);
+    }
+
+
+  }
+
+  const friendIds = new Set(friends.map(f => f._id));
+  console.log(friendIds);
+
 
   return (
     <div className="bg-gray-800 rounded-lg shadow-lg p-6 hover:bg-gray-750 transition-colors border border-gray-700">
@@ -68,6 +96,14 @@ export default function Card({ item ,online,jointeamhandler,usersteam,exitteamha
             <div>
               <strong className="text-gray-400">Role:</strong> {item.role}
             </div>
+            {!friendIds.has(item._id)? 
+            (<div>
+              <button onClick={sendrequesthandler}>Send Friend Request</button>
+            </div>):(
+              <div>
+                <button onClick={sendrequesthandler}>Remove Friend</button>
+              </div>
+            )}
             
           </>
         )}

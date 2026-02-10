@@ -30,8 +30,11 @@ export default function Navbar({
 
       {/* Right */}
       <div className="flex items-center gap-6">
+        <button className="text-gray-400 hover:text-white transition" onClick={()=> navigate("/mainpage/friends-chat")}>
+          Chat
+        </button>
         <button className="text-gray-400 hover:text-white transition">
-          <Bell size={20} />
+          <Bell size={20} onClick={()=> navigate("/notifications")} />
         </button>
 
         <button className="text-gray-400 hover:text-white transition">

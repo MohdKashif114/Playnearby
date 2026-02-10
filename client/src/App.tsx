@@ -14,6 +14,7 @@ import Login from './components/Login';
 import { AuthProvider, useAuth } from './Auth/AuthProvider';
 import ProtectedRoute from "./routes/ProtectedRoute"
 import 'leaflet/dist/leaflet.css';
+import Notifications from './components/Notifications';
 
 
 
@@ -30,7 +31,7 @@ function App() {
     const [onlineUsers, setOnlineUsers] = useState<Set<string>>(new Set());
 
 
-    const {user,setUser,setCurrentTeam,currentTeam}=useAuth();
+    const {user,setUser,setCurrentTeam,currentTeam,friends,setFriends}=useAuth();
 
 
 
@@ -64,6 +65,24 @@ function App() {
             fetchUser();
           }, []);
 
+
+          useEffect(()=>{
+              const fetchfriends=async()=>{
+                try{
+                  const res=await fetch("http://localhost:5000/my-friends",{
+                    credentials:"include"
+                  });
+                  
+                  const data=await res.json();
+                  console.log("friends are:",data);
+                  setFriends(data);
+                }catch(err){
+                  console.log("cant fetch friends",err)
+                }
+              }
+              fetchfriends();
+
+          },[]);
 
 
 
@@ -187,6 +206,7 @@ function App() {
           
           <Route path='/login' element={<Login/>}></Route>
           <Route path='/signup' element={<Signup/>}></Route>
+          <Route path='/notifications' element={<Notifications/>}></Route>
       </Routes>
     </>
   )

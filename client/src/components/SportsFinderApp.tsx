@@ -9,7 +9,7 @@ import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import TeamDetails from './TeamDetails';
 import TeamChat from './TeamChat';
 import OnMap from './OnMap';
-
+import { useLocation } from 'react-router-dom';
 
 
 
@@ -355,6 +355,10 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
   };
 }, []);
 
+    const location = useLocation();
+
+  
+
 
   return (
     <>
@@ -370,7 +374,7 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
       />
 
       <div className="flex-1 flex flex-col overflow-hidden">
-        <TopBar
+        {!location.pathname.includes("friends-chat") && <TopBar
           activeTab={activeTab}
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
@@ -378,11 +382,12 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
           setSelectedSport={setSelectedSport}
           selectedLocation={selectedLocation}
           setSelectedLocation={setSelectedLocation}
-          />
+          />}
 
         <div className="flex-1 overflow-y-auto p-6">
               <Routes>
                 <Route path="/" element={<Navigate to="players" replace />} />
+                  <Route path='/friends-chat' element={<h1>this is freinds chat</h1>}/>
                   <Route path="players" >
                     <Route index element={
                         <CardGrid

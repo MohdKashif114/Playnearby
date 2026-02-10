@@ -13,6 +13,7 @@ import messageRoute from "./routes/messageRoute"
 import { instrument } from "@socket.io/admin-ui";
 import setlocationRoute from "./routes/setlocationRoute"
 import addvenuecontroller from "./controllers/addvenuecontroller";
+import friendrequestRoute from "./routes/friendrequestRoute"
 
 
 dns.setServers(["1.1.1.1"]);
@@ -70,6 +71,7 @@ app.use("/messages",messageRoute);
 app.use(setlocationRoute)
 app.use("/addvenue",addvenuecontroller)
 app.use("/fetchallvenues",authMiddleware,fetchAllVenues)
+app.use(friendrequestRoute);
 
 
 
