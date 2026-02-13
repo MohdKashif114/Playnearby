@@ -26,11 +26,11 @@ export default function Navbar({
   return (
     <div className="h-20 bg-gray-800 border-b border-gray-700 px-6 flex items-center justify-between">
       {/* Left */}
-      <h1 className="text-xl font-bold text-white">{title}</h1>
+      <h1 className="text-xl font-bold text-white" onClick={()=> navigate("/mainpage")}>{title}</h1>
 
       {/* Right */}
       <div className="flex items-center gap-6">
-        <button className="text-gray-400 hover:text-white transition" onClick={()=> navigate("/mainpage/friends-chat")}>
+        <button className="text-gray-400 hover:text-white transition" onClick={()=> navigate("/private-chats")}>
           Chat
         </button>
         <button className="text-gray-400 hover:text-white transition">
@@ -38,7 +38,7 @@ export default function Navbar({
         </button>
 
         <button className="text-gray-400 hover:text-white transition">
-          <User size={20} />
+          <User size={20} onClick={()=> navigate("/profile")} />
         </button>
 
         {user ? (

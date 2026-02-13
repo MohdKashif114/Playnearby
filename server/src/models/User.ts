@@ -48,7 +48,15 @@ const userSchema = new mongoose.Schema(
     type: mongoose.Schema.Types.ObjectId,
     ref: "Team",
     default: null,
-  },
+    },
+    bio:{
+      type:String,
+    },
+    profileImage:{
+      type:String,
+    }
+    
+
 
   },
   { timestamps: true }

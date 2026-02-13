@@ -7,6 +7,7 @@ import {Server} from "socket.io"
 import { setupPresence } from "./sockets/connections";
 // const cookieParser = require("cookie-parser");
 import cookieParser from "cookie-parser"
+dotenv.config();
 import mainpageauthRoute from "./routes/mainpageauthRoute"
 import fetchRoutes from "./routes/fetchRoutes"
 import messageRoute from "./routes/messageRoute"
@@ -14,10 +15,10 @@ import { instrument } from "@socket.io/admin-ui";
 import setlocationRoute from "./routes/setlocationRoute"
 import addvenuecontroller from "./controllers/addvenuecontroller";
 import friendrequestRoute from "./routes/friendrequestRoute"
+import privatemessageRoute from "./routes/privatemessageRoute"
 
 
 dns.setServers(["1.1.1.1"]);
-dotenv.config();
 
 import connectDB from "./config/db";
 import passport from "passport";
@@ -60,7 +61,7 @@ app.use(cors({
   
   
 
-
+app.use(express.urlencoded({ extended: true }))
 app.use(express.json());
 app.use(cookieParser());
 app.use(passport.initialize());
@@ -72,7 +73,7 @@ app.use(setlocationRoute)
 app.use("/addvenue",addvenuecontroller)
 app.use("/fetchallvenues",authMiddleware,fetchAllVenues)
 app.use(friendrequestRoute);
-
+app.use(privatemessageRoute);
 
 
 
@@ -84,4 +85,5 @@ const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  
 });

@@ -15,6 +15,10 @@ interface userT{
     lng:number;
   };
   area:string;
+  role:string;
+  bio:string;
+  profileImage:string;
+  contact:string
 }
 
 interface Friend{
@@ -39,7 +43,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     id:"",
     sport:"",
     location:undefined,
-    area:""
+    area:"",
+    role:"",
+    bio:"",
+    profileImage:"",
+    contact:"",
   });
   const [currentTeam,setCurrentTeam] = useState<string>("");
   const [friends,setFriends]=useState<Friend[]>([]);

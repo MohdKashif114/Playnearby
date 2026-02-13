@@ -2,6 +2,7 @@ import { Socket,Server } from "socket.io";
 import Team from "../models/Team";
 import User from "../models/User";
 import Message from "../models/Message";
+import PrivateMessage from "../models/PrivateMessage";
 
 
 
@@ -41,6 +42,7 @@ export function setupPresence(io:Server) {
     
     socket.on("user-online", (userId : string) => {
       onlineUsers.set(userId, socket.id);
+      socket.join(userId);
       io.emit("online-users", [...onlineUsers.keys()]);
     });
     
@@ -190,10 +192,30 @@ export function setupPresence(io:Server) {
     }catch(err){
       console.log("Cant save message",err);
     }
-
-
-
   })
+
+
+  socket.on("send-private-message", async ({ senderId, receiverId, text }) => {
+
+ 
+  try{
+    
+    const newMessage={
+                      sender:senderId,
+                      receiver:receiverId,
+                      text:text
+                    }
+
+                    const savedMessage = await PrivateMessage.create(newMessage);
+                    io.to(receiverId).emit("receive-private-message",newMessage);
+
+    console.log("saved message:",savedMessage);
+   
+
+  }catch(err){
+    console.log("cant save private message in db",err);
+  }
+});
 
 
   

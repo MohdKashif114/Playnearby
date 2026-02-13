@@ -59,14 +59,18 @@ export default function Card({ item ,online,jointeamhandler,usersteam,exitteamha
 
 
   }
-
-  const friendIds = new Set(friends.map(f => f._id));
-  console.log(friendIds);
+  
+    console.log("friends are from array:",friends)
+     const friendIds = new Set(friends?.map(f => f._id)||[]);
+    console.log("friends are from set",friendIds);
+ 
 
 
   return (
-    <div className="bg-gray-800 rounded-lg shadow-lg p-6 hover:bg-gray-750 transition-colors border border-gray-700">
+    <div className="bg-gray-800 rounded-lg shadow-lg p-6 hover:bg-gray-750 transition-colors border border-gray-700 flex gap-10 align-middle items-center">
       {/* Header */}
+      <div>
+
       <div className="flex justify-between items-start mb-4">
         <div>
           <div className='flex gap-3 items-center justify-center'>
@@ -75,7 +79,7 @@ export default function Card({ item ,online,jointeamhandler,usersteam,exitteamha
               className={`inline-block w-3 h-3 rounded-full ${
                 online ? "bg-green-500" : "bg-gray-500"
               }`}
-            ></span>
+              ></span>
           </div>
         </div>
       </div>
@@ -116,7 +120,7 @@ export default function Card({ item ,online,jointeamhandler,usersteam,exitteamha
             </div>
             {currentTeam===null?
             (
-            <div>
+              <div>
               <button onClick={()=>jointeamhandler(item._id)}>Join Team</button>
             </div>):
             (usersteam && <div className='flex justify-center align-middle gap-2'>
@@ -124,7 +128,7 @@ export default function Card({ item ,online,jointeamhandler,usersteam,exitteamha
               <Link to={item._id}>View Team</Link>
             </div>
             )
-            }
+          }
           </>
         )}
 
@@ -136,9 +140,17 @@ export default function Card({ item ,online,jointeamhandler,usersteam,exitteamha
             
           </>
         )}
-
-        
       </div>
+        </div>
+      <div>
+
+        <img
+          src="https://hancockogundiyapartners.com/wp-content/uploads/2019/07/dummy-profile-pic-300x300.jpg"
+          alt="profile"
+          className="h-14 w-14 rounded-full object-cover"
+          />
+        </div>
+
     </div>
   );
 }

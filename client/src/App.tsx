@@ -15,6 +15,8 @@ import { AuthProvider, useAuth } from './Auth/AuthProvider';
 import ProtectedRoute from "./routes/ProtectedRoute"
 import 'leaflet/dist/leaflet.css';
 import Notifications from './components/Notifications';
+import PrivateChat from './components/PrivateChat';
+import Profile from './components/Profile';
 
 
 
@@ -51,7 +53,12 @@ function App() {
                   id:data._id,
                   sport:data.sport,
                   location:data.location,
-                  area:data.area
+                  area:data.area,
+                  role:data.role,
+                  profileImage:data.profileImage,
+                  contact:data.contact,
+                  bio:data.bio
+
                 });
                 console.log("current team is ",data.currentTeam);
                 setCurrentTeam(data.currentTeam);
@@ -207,6 +214,8 @@ function App() {
           <Route path='/login' element={<Login/>}></Route>
           <Route path='/signup' element={<Signup/>}></Route>
           <Route path='/notifications' element={<Notifications/>}></Route>
+          <Route path='/private-chats' element={<PrivateChat onlineUsers={onlineUsers}/>}></Route>
+          <Route path='/profile' element={<Profile/>}></Route>
       </Routes>
     </>
   )

@@ -4,6 +4,8 @@ import jwt from "jsonwebtoken";
 import { authMiddleware } from "../middleware/authMiddleware";
 import { JwtPayload } from "jsonwebtoken";
 import User from "../models/User"
+import updateprofilecontroller from "../controllers/updateprofilecontroller"
+import upload from "../middleware/upload";
 
 const router = express.Router();
 
@@ -24,6 +26,8 @@ router.get("/authenticate", authMiddleware, async (req, res) => {
   }
   res.json(updatedUser);
 });
+
+router.put("/update-profile",authMiddleware,upload.single("profileImage"),updateprofilecontroller);
 
 
 
