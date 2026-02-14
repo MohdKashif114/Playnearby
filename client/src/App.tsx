@@ -57,7 +57,8 @@ function App() {
                   role:data.role,
                   profileImage:data.profileImage,
                   contact:data.contact,
-                  bio:data.bio
+                  bio:data.bio,
+                  city:data.city
 
                 });
                 console.log("current team is ",data.currentTeam);

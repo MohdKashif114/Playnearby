@@ -25,7 +25,7 @@ import passport from "passport";
 import "./config/passport";
 import authRoutes from "./routes/authRoutes"
 import { authMiddleware } from "./middleware/authMiddleware";
-import { fetchAllVenues } from "./controllers/fetchvenuecontroller";
+import { fetchAllVenues, fetchNearbyVenues } from "./controllers/fetchvenuecontroller";
 
 const app = express();
 const server=http.createServer(app);
@@ -72,6 +72,8 @@ app.use("/messages",messageRoute);
 app.use(setlocationRoute)
 app.use("/addvenue",addvenuecontroller)
 app.use("/fetchallvenues",authMiddleware,fetchAllVenues)
+app.use("/venues/nearby", authMiddleware,fetchNearbyVenues);
+
 app.use(friendrequestRoute);
 app.use(privatemessageRoute);
 

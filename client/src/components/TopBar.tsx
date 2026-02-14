@@ -1,6 +1,7 @@
 import { Search } from 'lucide-react';
 import type { SportFilter, TabType } from '../types';
 import { locations } from '../data/locations';
+import { useLocation } from 'react-router-dom';
 
 interface TopBarProps {
   activeTab: TabType;
@@ -10,6 +11,10 @@ interface TopBarProps {
   setSelectedSport: (val: SportFilter) => void;
   selectedLocation: string;
   setSelectedLocation: (val: string) => void;
+  filterdata:()=>void;
+  fetchNearbyVenues:(val:number)=>void;
+  fetchNearbyPlayers:(val:number)=>void;
+  setRadius:(val:number)=>void;
 }
 
 export default function TopBar({
@@ -20,7 +25,13 @@ export default function TopBar({
   setSelectedSport,
   selectedLocation,
   setSelectedLocation,
+  filterdata,
+  fetchNearbyVenues,
+  fetchNearbyPlayers,
+  setRadius
 }: TopBarProps) {
+
+  const location = useLocation();
   return (
     <div className="bg-gray-800 border-b border-gray-700 p-4">
       <div className="flex items-center gap-4 flex-wrap">
@@ -62,6 +73,23 @@ export default function TopBar({
             </option>
           ))}
         </select>
+          <select
+            onChange={(e) =>{
+              setRadius(Number(e.target.value))
+              if(location.pathname.includes("venues")) fetchNearbyVenues(Number(e.target.value))
+              else if(location.pathname.includes("players")) fetchNearbyPlayers(Number(e.target.value))
+              else fetchNearbyVenues(Number(e.target.value))
+              }
+            } 
+          >
+            <option value="2">2 km</option>
+            <option value="5">5 km</option>
+            <option value="10">10 km</option>
+            <option value="20">20 km</option>
+          </select>
+
+
+        <button onClick={filterdata}>Filter Data</button>
       </div>
     </div>
   );

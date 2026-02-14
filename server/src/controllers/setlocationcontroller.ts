@@ -4,7 +4,7 @@ import User from "../models/User";
 export const setLocation = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user.id; 
-    const { location,area } = req.body;
+    const { location,area,city } = req.body;
     console.log("the area is ",area);
     console.log("location is ",location.lat,"and",location.lng)
     
@@ -24,6 +24,7 @@ export const setLocation = async (req: Request, res: Response) => {
     const updatedUser=await User.findByIdAndUpdate(
       userId,
       {
+        city,
         area,
         location: {
           type: "Point",

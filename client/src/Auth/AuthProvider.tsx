@@ -18,7 +18,8 @@ interface userT{
   role:string;
   bio:string;
   profileImage:string;
-  contact:string
+  contact:string,
+  city:string,
 }
 
 interface Friend{
@@ -48,6 +49,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     bio:"",
     profileImage:"",
     contact:"",
+    city:""
   });
   const [currentTeam,setCurrentTeam] = useState<string>("");
   const [friends,setFriends]=useState<Friend[]>([]);

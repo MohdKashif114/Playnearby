@@ -21,6 +21,10 @@ const userSchema = new mongoose.Schema(
       type:String,
       default:"Unknown"
     },
+    city:{
+      type:String,
+      dafault:"Unknown"
+    },
     location: {
       type: {
         type: String,

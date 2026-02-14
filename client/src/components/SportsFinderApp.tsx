@@ -43,6 +43,18 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const {currentTeam,setCurrentTeam}=useAuth();
   const navigate=useNavigate();
+  const {user}=useAuth();
+  const location=useLocation();
+  const [radius,setRadius]=useState<number>(5);
+
+
+  if(location.pathname.includes("players")){
+    ()=> setActiveTab("players")
+  }else if(location.pathname.includes("teams")){
+    ()=>setActiveTab("teams")
+  }else{
+    ()=>setActiveTab("venues")
+  }
   const [players, setPlayers] = useState<Player[]>([
     
     {
@@ -57,6 +69,8 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
       role: 'Batsman',
       available: 'Weekends',
       contact: '9876543210',
+      profileImage:"",
+      distanceKm:""
     },
     {
       _id: "2",
@@ -70,14 +84,16 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
       role: 'Striker',
       available: 'Evenings',
       contact: '9876543211',
+      profileImage:"",
+      distanceKm:""
     },
     
   ]);
   
-  const [teams, setTeams] = useState<Team[]>([]);
+  const [teams, setTeams] = useState<Team[] >([]);
 
 
-  const [venues, setVenues] = useState<Venue[]>([
+  const [venues, setVenues] = useState<Venue[]>([ 
     {
       _id: "1",
       name: 'Sigra Ground',
@@ -90,6 +106,8 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
       type: 'Open Ground',
       availability: 'Daily 6am-8pm',
       contact: 'Free to play',
+      profileImage:"",
+      distanceKm:""
     },
   ]);
   
@@ -128,27 +146,72 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
   
 
   const filteredData = () => {
-    const data =
-      activeTab === 'players'
-        ? players
-        : activeTab === 'teams'
-        ? teams
-        : venues;
+  const data =
+    activeTab === 'players'
+      ? players
+      : activeTab === 'teams'
+      ? teams
+      : venues;
 
-    return data.filter((item) => {
-      const matchesSport =
-        selectedSport === 'all' ||
-        item.sport === selectedSport ||
-        item.sport === 'both';
+  return data.filter((item) => {
+    const matchesSport =
+      selectedSport === "all" ||
+      item.sport.toLowerCase() === selectedSport;
 
-      const matchesLocation =
-        selectedLocation === 'all';
+    const matchesLocation =
+      selectedLocation === "all";
 
-      
+    return matchesSport && matchesLocation;
+  });
+};
 
-      return matchesSport && matchesLocation;
-    });
+
+  const fetchNearbyVenues = async (radius: number) => {
+    if (!user?.location) return;
+    try{
+      const { lat, lng } = user.location;
+  
+      const res = await fetch(
+        `http://localhost:5000/venues/nearby?lat=${lat}&lng=${lng}&radius=${radius}`,
+        {
+          credentials: "include",
+        },
+      );
+  
+      const data = await res.json();
+      console.log("venues are:",data);
+      setVenues(data.Venues);
+
+    }catch(err){
+      console.log("error fetching",err);
+    }
   };
+
+  const fetchNearbyPlayers = async (radius: number) => {
+    if (!user?.location) return;
+    try{
+      const { lat, lng } = user.location;
+  
+      const res = await fetch(
+        `http://localhost:5000/players/nearby?lat=${lat}&lng=${lng}&radius=${radius}`,
+        {
+          credentials: "include",
+        },
+      );
+  
+      const data = await res.json();
+      console.log("players are:",data);
+      setPlayers(data.Players);
+
+    }catch(err){
+      console.log("error fetching",err);
+    }
+  };
+
+
+  
+
+
 
     async function reverseGeocode(lat: number, lng: number): Promise<string> {
       const res = await fetch(
@@ -268,7 +331,7 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
 
     const fetchplayers=async()=>{
       try{
-        const res=await fetch("http://localhost:5000/fetchallusers",{
+        const res=await fetch(`http://localhost:5000/fetchallusers/${user?.city}`,{
           credentials:"include",
         });
         const data=await res.json();
@@ -285,7 +348,7 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
     }
     fetchplayers();
 
-  },[]);
+  },[user]);
 
   useEffect(() => {
 
@@ -355,7 +418,7 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
   };
 }, []);
 
-    const location = useLocation();
+  
 
   
 
@@ -375,13 +438,18 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
 
       <div className="flex-1 flex flex-col overflow-hidden">
         {!location.pathname.includes("friends-chat") && <TopBar
-          activeTab={activeTab}
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          selectedSport={selectedSport}
-          setSelectedSport={setSelectedSport}
-          selectedLocation={selectedLocation}
-          setSelectedLocation={setSelectedLocation}
+            activeTab={activeTab}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            selectedSport={selectedSport}
+            setSelectedSport={setSelectedSport}
+            selectedLocation={selectedLocation}
+            setSelectedLocation={setSelectedLocation}
+            filterdata={filteredData}
+            fetchNearbyVenues={fetchNearbyVenues}
+            fetchNearbyPlayers={fetchNearbyPlayers}
+            setRadius={setRadius}
+
           />}
 
         <div className="flex-1 overflow-y-auto p-6">
@@ -391,7 +459,7 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
                   <Route path="players" >
                     <Route index element={
                         <CardGrid
-                          items={players}
+                          items={filteredData()}
                           noofuser={noofuser}
                           onlineUsers={onlineUsers}
                           onAddClick={() => setShowAddModal(true)}
@@ -400,7 +468,7 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
                           exitteamhandler={exitteamhandler}
                         />
                       } />
-                    <Route path="map" element={<OnMap items={players} onlineUsers={onlineUsers} type={"player"}/>}/>
+                    <Route path="map" element={<OnMap items={filteredData()} onlineUsers={onlineUsers} type={"player"} radius={radius}/>}/>
                   </Route>
                 <Route path="teams">
 
@@ -419,7 +487,7 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
                   }
                 />
                 
-                <Route path="map" element={<OnMap items={teams} onlineUsers={onlineUsers} type={"team"}/>}/>
+                <Route path="map" element={<OnMap items={filteredData()} onlineUsers={onlineUsers} type={"team"} radius={radius}/>}/>
                 <Route path=":teamId">
                   <Route index element={<TeamDetails teams={teams} />} />
                   <Route path="chat" element={<TeamChat />} />
@@ -434,7 +502,7 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
                   <Route index 
                         element={
                             <CardGrid
-                            items={venues}
+                            items={filteredData()}
                             noofuser={noofuser}
                             onlineUsers={onlineUsers}
                             onAddClick={() => setShowAddModal(true)}
@@ -444,7 +512,7 @@ export default function SportsFinderApp({noofuser,onlineUsers}:Props) {
                           />
                         }
                     />
-                    <Route path="map"  element={<OnMap items={venues} onlineUsers={onlineUsers} type={"venue"}/>} />
+                    <Route path="map"  element={<OnMap items={filteredData()} onlineUsers={onlineUsers} type={"venue"} radius={radius}/>} />
                 </Route>
               </Routes>
             </div>

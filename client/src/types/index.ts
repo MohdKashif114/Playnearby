@@ -10,6 +10,8 @@ export interface Player {
   role: string;
   available: string;
   contact: string;
+  profileImage:string;
+  distanceKm:string;
 }
 
 export type Member = {
@@ -30,6 +32,7 @@ export interface Team {
         createdBy:string,
         status:string,
         maxPlayers:number,
+        
 }
 
 export interface Venue {
@@ -44,6 +47,8 @@ export interface Venue {
   type: string;
   availability: string;
   contact: string;
+  profileImage:string;
+  distanceKm:string;
 }
 
 export type TabType = 'players' | 'teams' | 'venues';

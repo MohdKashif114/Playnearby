@@ -12,7 +12,7 @@ import {Link} from "react-router-dom";
 type CardItem = Player | Team | Venue;
 
 interface TeamDetailsProps{
-    teams:Team[];
+    teams:Team[] ;
 }
 
 

@@ -61,7 +61,10 @@ export default function Card({ item ,online,jointeamhandler,usersteam,exitteamha
   }
   
     console.log("friends are from array:",friends)
-     const friendIds = new Set(friends?.map(f => f._id)||[]);
+     const friendIds = new Set(
+        Array.isArray(friends) ? friends.map(f => f._id) : []
+      );
+
     console.log("friends are from set",friendIds);
  
 
@@ -70,87 +73,121 @@ export default function Card({ item ,online,jointeamhandler,usersteam,exitteamha
     <div className="bg-gray-800 rounded-lg shadow-lg p-6 hover:bg-gray-750 transition-colors border border-gray-700 flex gap-10 align-middle items-center">
       {/* Header */}
       <div>
-
-      <div className="flex justify-between items-start mb-4">
-        <div>
-          <div className='flex gap-3 items-center justify-center'>
-
-            <h3 className={`text-xl font-bold ${isTeam(item) && usersteam?("text-green-500"):("text-gray-100")}`}>{item.name}</h3><span
-              className={`inline-block w-3 h-3 rounded-full ${
-                online ? "bg-green-500" : "bg-gray-500"
-              }`}
+        <div className="flex justify-between items-start mb-4">
+          <div>
+            <div className="flex gap-3 items-center justify-center">
+              <h3
+                className={`text-xl font-bold ${isTeam(item) && usersteam ? "text-green-500" : "text-gray-100"}`}
+              >
+                {item.name}
+              </h3>
+              <span
+                className={`inline-block w-3 h-3 rounded-full ${
+                  online ? "bg-green-500" : "bg-gray-500"
+                }`}
               ></span>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Body */}
-      <div className="space-y-2 text-gray-300">
-        <div className="flex items-center gap-2">
-          <MapPin className="w-4 h-4 text-gray-400" />
-          <span>{item.area}</span>
-        </div>
-        {!isPlayer(item) && <div className="flex items-center gap-2">
-          
-          <strong className='text-gray-400'>Sport:</strong><span>{item.sport}</span>
-        </div>}
-
-        {isPlayer(item) && (
-          <>
-            <div>
-              <strong className="text-gray-400">Role:</strong> {item.role}
+        {/* Body */}
+        <div className="space-y-2 text-gray-300">
+          <div className="flex items-center gap-2">
+            <MapPin className="w-4 h-4 text-gray-400" />
+            <span>{item.area}</span>
+          </div>
+          {!isPlayer(item) && (
+            <div className="flex items-center gap-2">
+              <strong className="text-gray-400">Sport:</strong>
+              <span>{item.sport}</span>
             </div>
-            {!friendIds.has(item._id)? 
-            (<div>
-              <button onClick={sendrequesthandler}>Send Friend Request</button>
-            </div>):(
+          )}
+
+          {isPlayer(item) && (
+            <>
               <div>
-                <button onClick={sendrequesthandler}>Remove Friend</button>
+                <strong className="text-gray-400">Role:</strong> {item.role}
               </div>
-            )}
-            
-          </>
-        )}
+              {!friendIds.has(item._id) ? (
+                <div>
+                  <button onClick={sendrequesthandler}>
+                    Send Friend Request
+                  </button>
+                </div>
+              ) : (
+                <div>
+                  <button onClick={sendrequesthandler}>Remove Friend</button>
+                </div>
+              )}
+            </>
+          )}
 
-        {isTeam(item) && (
-          <>
-            <div>
-              <strong className="text-gray-400">Current Players:</strong>{' '}
-              {item.members.length}/{item.maxPlayers}
-            </div>
-            {currentTeam===null?
-            (
+          {isTeam(item) && (
+            <>
               <div>
-              <button onClick={()=>jointeamhandler(item._id)}>Join Team</button>
-            </div>):
-            (usersteam && <div className='flex justify-center align-middle gap-2'>
-              <button onClick={()=>exitteamhandler(item._id)}>Exit Team</button>
-              <Link to={item._id}>View Team</Link>
-            </div>
-            )
-          }
-          </>
-        )}
+                <strong className="text-gray-400">Current Players:</strong>{" "}
+                {item.members.length}/{item.maxPlayers}
+              </div>
+              {currentTeam === null ? (
+                <div>
+                  <button onClick={() => jointeamhandler(item._id)}>
+                    Join Team
+                  </button>
+                </div>
+              ) : (
+                usersteam && (
+                  <div className="flex justify-center align-middle gap-2">
+                    <button onClick={() => exitteamhandler(item._id)}>
+                      Exit Team
+                    </button>
+                    <Link to={item._id}>View Team</Link>
+                  </div>
+                )
+              )}
+            </>
+          )}
 
-        {isVenue(item) && (
-          <>
-            <div>
-              <strong className="text-gray-400">Type:</strong> {item.type}
-            </div>
-            
-          </>
-        )}
-      </div>
+          {isVenue(item) && (
+            <>
+              <div>
+                <strong className="text-gray-400">Type:</strong> {item.type}
+              </div>
+              <div>
+                <strong className="text-gray-400">Distance:</strong>{" "}
+                {item.distanceKm}
+              </div>
+              <button
+                onClick={() => {
+                  if (!item.location) return;
+
+                  const { lat, lng } = item.location;
+
+                  window.open(
+                    `https://www.google.com/maps?q=${lat},${lng}`,
+                    "_blank",
+                  );
+                }}
+                className="bg-blue-600 text-white px-3 py-1 rounded"
+              >
+                Open in Google Maps
+              </button>
+            </>
+          )}
         </div>
-      <div>
-
-        <img
-          src="https://hancockogundiyapartners.com/wp-content/uploads/2019/07/dummy-profile-pic-300x300.jpg"
-          alt="profile"
-          className="h-14 w-14 rounded-full object-cover"
+      </div>
+      {!isTeam(item) && (
+        <div>
+          <img
+            src={
+              item.profileImage
+                ? item.profileImage
+                : "https://hancockogundiyapartners.com/wp-content/uploads/2019/07/dummy-profile-pic-300x300.jpg"
+            }
+            alt="profile"
+            className="h-14 w-14 rounded-full object-cover"
           />
         </div>
-
+      )}
     </div>
   );
 }

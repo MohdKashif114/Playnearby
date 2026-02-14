@@ -1,5 +1,5 @@
 import express from "express";
-import fetchusersController from "../controllers/fetchuserscontroller";
+import {fetchusersController,fetchNearbyPlayers} from "../controllers/fetchuserscontroller";
 import { authMiddleware } from "../middleware/authMiddleware";
 
 
@@ -8,7 +8,8 @@ import { authMiddleware } from "../middleware/authMiddleware";
 const router=express.Router();
 
 
-router.get("/fetchallusers",fetchusersController);
+router.get("/fetchallusers/:city",fetchusersController);
+router.get("/players/nearby",fetchNearbyPlayers)
 
 
 export default router;

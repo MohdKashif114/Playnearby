@@ -76,7 +76,7 @@ const useCurrentLocation = () => {
 };
 
 
-async function reverseGeocode(lat: number, lng: number): Promise<string> {
+async function reverseGeocode(lat: number, lng: number): Promise<{area:string;city:string}> {
 
 
   const res = await fetch(
@@ -91,14 +91,14 @@ async function reverseGeocode(lat: number, lng: number): Promise<string> {
   if (!res.ok) throw new Error("Reverse geocode failed");
 
   const data = await res.json();
+  console.log("the location is ",data);
 
   return (
-    data.address?.suburb ||
-    data.address?.neighbourhood ||
-    data.address?.city ||
-    data.address?.town ||
-    data.address?.state ||
-    "Unknown area"
+    {
+      area:data?.address.suburb || "Unknown",
+      city:data?.address.city || "Unknown"
+    }
+    
   );
 }
 
@@ -115,14 +115,14 @@ const setlocationhandler=async()=>{
         const { lat, lng } = user.location;
 
         
-        let areaName = "";
+        let areacityName = {area:"",city:""};
         try {
-            areaName = await reverseGeocode(lat, lng);
+            areacityName = await reverseGeocode(lat, lng);
         } catch {
-            areaName = "Unknown area";
+            areacityName = {area:"Unknown area",city:"Unknown"};
         }
 
-        console.log("the area of user is ",areaName);
+        console.log("the area of user is ",areacityName);
         const res=await fetch("http://localhost:5000/setlocation",{
             credentials: "include",
             method:"POST",
@@ -131,13 +131,23 @@ const setlocationhandler=async()=>{
             },
             body: JSON.stringify({
                     location:user?.location,
-                    area:areaName
+                    area:areacityName.area,
+                    city:areacityName.city
             }),
         })
 
         if (!res.ok) throw new Error("Location not set");
 
         const data = await res.json();
+        setUser((prev:userT)=>
+        prev
+          ? {
+              ...prev,
+              area:areacityName.area,
+              city:areacityName.city,
+            }
+          : prev
+      );
         console.log("The respose is",data.message)
         navigate("/mainpage")
 
