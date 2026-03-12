@@ -29,6 +29,19 @@ const venueSchema = new mongoose.Schema({
         
     }
   },
+  averageRating: {
+    type: Number,
+    default: 0
+  },
+  ratingCount: {
+    type: Number,
+    default: 0
+  },
+  images:{
+    type:[String],
+    default:[]
+  }
+
 });
 
 venueSchema.index({ location: "2dsphere" });

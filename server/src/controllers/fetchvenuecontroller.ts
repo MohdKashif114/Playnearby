@@ -4,8 +4,8 @@ import Venue from "../models/Venue";
 export const fetchAllVenues = async (req: Request, res: Response) => {
   try {
     const venues = await Venue.find({}, { __v: 0 })
-      .lean(); // 🔥 important
-
+      .lean(); 
+    console.log("venues are :",venues);
     const formattedVenues = venues.map((venue) => ({
       ...venue,
       location: venue.location?.coordinates
@@ -65,6 +65,9 @@ export const fetchNearbyVenues = async (req: Request, res: Response) => {
           contact: 1,
           location: 1,
           distance: 1,
+          averageRating:1,
+          ratingCount:1,
+          images:1,
         },
       },
     ]);

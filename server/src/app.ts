@@ -13,9 +13,10 @@ import fetchRoutes from "./routes/fetchRoutes"
 import messageRoute from "./routes/messageRoute"
 import { instrument } from "@socket.io/admin-ui";
 import setlocationRoute from "./routes/setlocationRoute"
-import addvenuecontroller from "./controllers/addvenuecontroller";
+import {addvenuecontroller} from "./controllers/addvenuecontroller";
 import friendrequestRoute from "./routes/friendrequestRoute"
 import privatemessageRoute from "./routes/privatemessageRoute"
+import ratingRoutes from "./routes/ratingRoutes"
 
 
 dns.setServers(["1.1.1.1"]);
@@ -26,6 +27,7 @@ import "./config/passport";
 import authRoutes from "./routes/authRoutes"
 import { authMiddleware } from "./middleware/authMiddleware";
 import { fetchAllVenues, fetchNearbyVenues } from "./controllers/fetchvenuecontroller";
+import teamRoutes from "./routes/teamRoutes"
 
 const app = express();
 const server=http.createServer(app);
@@ -73,9 +75,10 @@ app.use(setlocationRoute)
 app.use("/addvenue",addvenuecontroller)
 app.use("/fetchallvenues",authMiddleware,fetchAllVenues)
 app.use("/venues/nearby", authMiddleware,fetchNearbyVenues);
-
+app.use(teamRoutes);
 app.use(friendrequestRoute);
 app.use(privatemessageRoute);
+app.use(ratingRoutes)
 
 
 

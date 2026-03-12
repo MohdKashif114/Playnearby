@@ -5,6 +5,18 @@ interface AuthProviderProps {
   children: React.ReactNode;
 }
 
+ interface User {
+  _id: string;
+  name: string;
+  email?: string;
+}
+
+
+ interface FriendRequest {
+  _id: string;
+  sender: User;
+}
+
 
 interface userT{
   name:string;
@@ -18,13 +30,26 @@ interface userT{
   role:string;
   bio:string;
   profileImage:string;
-  contact:string,
-  city:string,
+  contact:string;
+  city:string;
+  currentTeam:string|null;
 }
 
 interface Friend{
   name:string;
   _id:string;
+}
+
+
+interface Team {
+  _id: string;
+  name: string;
+}
+
+ interface TeamInvitation {
+  _id: string;
+  team: Team;
+  invitedBy: User;
 }
 
 interface Authprops{
@@ -34,6 +59,10 @@ interface Authprops{
   setCurrentTeam:React.Dispatch<React.SetStateAction<any>>;
   friends:Friend[];
   setFriends:React.Dispatch<React.SetStateAction<any>>;
+  friendRequests:FriendRequest[];
+  setFriendRequests:React.Dispatch<React.SetStateAction<FriendRequest[]>>;
+  teamInvites:TeamInvitation[];
+  setTeamInvites:React.Dispatch<React.SetStateAction<TeamInvitation[]>>;
 }
 
 const AuthContext=createContext<Authprops|undefined>(undefined);
@@ -49,13 +78,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     bio:"",
     profileImage:"",
     contact:"",
-    city:""
+    city:"",
+    currentTeam:null
   });
   const [currentTeam,setCurrentTeam] = useState<string>("");
   const [friends,setFriends]=useState<Friend[]>([]);
+  const [friendRequests, setFriendRequests] = useState<FriendRequest[]>([]);
+  const [teamInvites, setTeamInvites] = useState<TeamInvitation[]>([]);
 
   return (
-    <AuthContext.Provider value={{ user, setUser,currentTeam,setCurrentTeam,friends,setFriends }}>
+    <AuthContext.Provider value={{ user, setUser,currentTeam,setCurrentTeam,friends,setFriends,friendRequests,setFriendRequests,
+                                    teamInvites,setTeamInvites
+     }}>
       {children}
     </AuthContext.Provider>
   );

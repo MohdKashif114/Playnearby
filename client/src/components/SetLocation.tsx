@@ -78,28 +78,33 @@ const useCurrentLocation = () => {
 
 async function reverseGeocode(lat: number, lng: number): Promise<{area:string;city:string}> {
 
+  try{
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`,
+      {
+        headers: {
+          Referer: "http://localhost:5173/", // change in prod
+        },
+      }
+    );
+  
+    if (!res.ok) throw new Error("Reverse geocode failed");
+  
+    const data = await res.json();
+    console.log("the location is ",data);
+  
+    return (
+      {
+        area:data?.address.suburb || "Unknown",
+        city:data?.address.city || "Unknown"
+      }
+      
+    );
 
-  const res = await fetch(
-    `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`,
-    {
-      headers: {
-        Referer: "http://localhost:5173/", // change in prod
-      },
-    }
-  );
-
-  if (!res.ok) throw new Error("Reverse geocode failed");
-
-  const data = await res.json();
-  console.log("the location is ",data);
-
-  return (
-    {
-      area:data?.address.suburb || "Unknown",
-      city:data?.address.city || "Unknown"
-    }
-    
-  );
+  }catch(err){
+    console.log("geocode not working",err);
+    return({area:"Unknown",city:"Unknown"})
+  }
 }
 
 

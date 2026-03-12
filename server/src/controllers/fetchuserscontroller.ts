@@ -66,6 +66,12 @@ export const fetchNearbyPlayers = async (req: Request, res: Response) => {
         contact: 1,
         location: 1,
         distance: 1,
+        profileImage:1,
+        bio:1,
+        email:1,
+        role:1,
+        currentTeam:1,
+        city:1
         },
 
       },

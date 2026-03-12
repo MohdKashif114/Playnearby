@@ -12,11 +12,13 @@ export interface Player {
   contact: string;
   profileImage:string;
   distanceKm:string;
+  currentTeam:string|null;
 }
 
 export type Member = {
   _id: string;
   name: string;
+  profileImage:string;
 };
 
 export interface Team {
@@ -49,6 +51,9 @@ export interface Venue {
   contact: string;
   profileImage:string;
   distanceKm:string;
+  averageRating:number;
+  ratingCount:number;
+  images:string[];
 }
 
 export type TabType = 'players' | 'teams' | 'venues';

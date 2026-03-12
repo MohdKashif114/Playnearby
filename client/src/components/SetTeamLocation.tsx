@@ -79,7 +79,7 @@ const useCurrentLocation = () => {
     
     return(
         <div>
-            <h1>Set Location</h1>
+            <h1 className="mb-1">Set Location</h1>
             <MapContainer
                 center={[28.6139, 77.2090]}
                 zoom={13}

@@ -17,6 +17,15 @@ import 'leaflet/dist/leaflet.css';
 import Notifications from './components/Notifications';
 import PrivateChat from './components/PrivateChat';
 import Profile from './components/Profile';
+import { Toaster } from "@/components/ui/sonner";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { AppSidebar } from "@/components/app-sidebar"
+import { Dashboard } from './components/Dashboard';
+
+
+
+
+
 
 
 
@@ -33,7 +42,8 @@ function App() {
     const [onlineUsers, setOnlineUsers] = useState<Set<string>>(new Set());
 
 
-    const {user,setUser,setCurrentTeam,currentTeam,friends,setFriends}=useAuth();
+    const {user,setUser,setCurrentTeam,currentTeam,friends,setFriends,setFriendRequests,friendRequests,
+            teamInvites,setTeamInvites }=useAuth();
 
 
 
@@ -58,7 +68,8 @@ function App() {
                   profileImage:data.profileImage,
                   contact:data.contact,
                   bio:data.bio,
-                  city:data.city
+                  city:data.city,
+                  currentTeam:data.currentTeam,
 
                 });
                 console.log("current team is ",data.currentTeam);
@@ -149,6 +160,18 @@ function App() {
     };
   }, [currentTeam]);
 
+  useEffect(()=>{
+    socket.on("receive-request",(senderid,friendshipid)=>{
+      const friendreq={
+        _id:friendshipid,
+        sender:senderid
+      }
+      console.log("friendreq is ",friendreq);
+      alert("Friend Request Received");
+      setFriendRequests(prev=> [...prev,friendreq])
+    })
+    return ()=> {socket.off("receive-request")};
+  },[])
 
 
   
@@ -181,6 +204,19 @@ function App() {
       socket.emit("rejoin-team", currentTeam);
     }, [currentTeam]);
 
+    useEffect(() => {
+      if (!user?.id) return;
+
+      socket.on("team-invite", (invite) => {
+        console.log("New Team Invite:", invite);
+        
+        setTeamInvites((prev) => [...prev, invite]);
+      });
+
+      return () => {
+        socket.off("team-invite");
+      };
+    }, [user]);
 
     
 
@@ -189,18 +225,21 @@ function App() {
 
 
   return (
-    <>
+    <div className=" overflow-hidden">
       {/* <Navbar loggedin={loggedin}/> */}
       <Navbar
               loggedin={loggedin}
-              
+              noofusers={noofusers}
               logouthandler={logouthandler}
               />
       <Routes>
           <Route path='/mainpage/*'
             element={
               <ProtectedRoute>
-                <SportsFinderApp noofuser={noofusers} onlineUsers={onlineUsers}/> 
+                      <SportsFinderApp
+                        noofuser={noofusers}
+                        onlineUsers={onlineUsers}
+                      /> 
               </ProtectedRoute>
             }
           />
@@ -217,8 +256,10 @@ function App() {
           <Route path='/notifications' element={<Notifications/>}></Route>
           <Route path='/private-chats' element={<PrivateChat onlineUsers={onlineUsers}/>}></Route>
           <Route path='/profile' element={<Profile/>}></Route>
+          <Route path="/" element={<Dashboard/>}></Route>
       </Routes>
-    </>
+      <Toaster richColors position="top-right" />
+    </div>
   )
 }
 
