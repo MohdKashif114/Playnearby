@@ -371,7 +371,7 @@ export default function SportsFinderApp({ noofuser, onlineUsers }: Props) {
           setTeams(data.Teams);
         }
       } catch (err) {
-        console.log("Cant fetch Venues", err);
+        console.log("Cant fetch Teams", err);
       }
     };
 

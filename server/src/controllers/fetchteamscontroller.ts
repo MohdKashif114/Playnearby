@@ -6,7 +6,7 @@ export const fetchAllTeams = async (req: Request, res: Response) => {
   try {
     const teams = await Team.find({}, { __v: 0 })
       .lean().populate("members","name _id profileImage"); 
-    console.log("members are:",teams[0].members);
+    // console.log("members are:",teams[0].members);
     const formattedTeams = teams.map((team) => ({
       ...team,
       location: team.location?.coordinates
