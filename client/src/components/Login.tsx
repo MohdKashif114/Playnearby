@@ -32,7 +32,7 @@ export default function Login(){
   const onLogin=async (email:string,password:string)=>{
     console.log("loggging in....");
     try {
-        const res = await fetch("https://hustlehive.onrender.com/auth/login", {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
           credentials: "include",
           method:"POST",
           headers: {
@@ -66,7 +66,7 @@ export default function Login(){
 
   const onGoogleLogin=()=>{
     console.log("this is google login");
-    window.location.href = "https://hustlehive.onrender.com/auth/google";
+    window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
     
 
   }

@@ -29,7 +29,7 @@ export default function TeamChat() {
   useEffect(() => {
     const fetchmessage = async () => {
       try {
-        const res = await fetch(`https://hustlehive.onrender.com/messages/${teamId}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/messages/${teamId}`, {
           credentials: "include",
         });
         const data = await res.json();

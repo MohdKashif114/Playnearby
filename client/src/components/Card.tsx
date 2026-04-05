@@ -189,7 +189,7 @@ export default function Card({
   form.append("venueId", item._id);
 
   try {
-    const res = await fetch("https://hustlehive.onrender.com/venue/addimage", {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/venue/addimage`, {
       method: "PUT",
       credentials: "include",
       body: form,
@@ -217,7 +217,7 @@ export default function Card({
   const handleVenueRating = async (rating: number) => {
     if (!isVenue(item)) return;
     try {
-      const res = await fetch("https://hustlehive.onrender.com/venue/rate", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/venue/rate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -232,7 +232,7 @@ export default function Card({
 
   const invitetoteamhandler = async (userId: string) => {
     try {
-      const res = await fetch("https://hustlehive.onrender.com/team-invite", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/team-invite`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -245,7 +245,7 @@ export default function Card({
     }
   };
 
-  // ── PLAYER CARD ──────────────────────────────────────────────────────────
+  
   if (isPlayer(item)) {
     return (
       <div

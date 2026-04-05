@@ -57,7 +57,7 @@ export default function Profile() {
     (Object.keys(formData) as FieldName[]).forEach((k) => form.append(k, formData[k]));
     if (image) form.append("profileImage", image);
     try {
-      const res = await fetch("https://hustlehive.onrender.com/update-profile", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/update-profile`, {
         method: "PUT",
         credentials: "include",
         body: form,

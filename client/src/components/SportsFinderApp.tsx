@@ -163,7 +163,7 @@ export default function SportsFinderApp({ noofuser, onlineUsers }: Props) {
       const { lat, lng } = user.location;
 
       const res = await fetch(
-        `https://hustlehive.onrender.com/venues/nearby?lat=${lat}&lng=${lng}&radius=${radius}`,
+        `${import.meta.env.VITE_API_URL}/venues/nearby?lat=${lat}&lng=${lng}&radius=${radius}`,
         {
           credentials: "include",
         },
@@ -183,7 +183,7 @@ export default function SportsFinderApp({ noofuser, onlineUsers }: Props) {
       const { lat, lng } = user.location;
 
       const res = await fetch(
-        `https://hustlehive.onrender.com/players/nearby?lat=${lat}&lng=${lng}&radius=${radius}`,
+        `${import.meta.env.VITE_API_URL}/players/nearby?lat=${lat}&lng=${lng}&radius=${radius}`,
         {
           credentials: "include",
         },
@@ -290,7 +290,7 @@ export default function SportsFinderApp({ noofuser, onlineUsers }: Props) {
     }
     newEntry.area = areaName;
     try {
-      const res = await fetch("https://hustlehive.onrender.com/addvenue", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/addvenue`, {
         credentials: "include",
         method: "POST",
         headers: {
@@ -311,7 +311,7 @@ export default function SportsFinderApp({ noofuser, onlineUsers }: Props) {
       try {
         console.log("in fetch player",user?.city);
         const res = await fetch(
-          `https://hustlehive.onrender.com/fetchallusers/${user?.city}`,
+          `${import.meta.env.VITE_API_URL}/fetchallusers/${user?.city}`,
           {
             credentials: "include",
           },
@@ -331,7 +331,7 @@ export default function SportsFinderApp({ noofuser, onlineUsers }: Props) {
   useEffect(() => {
     const fetchVenues = async () => {
       try {
-        const res = await fetch("https://hustlehive.onrender.com/fetchallvenues", {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/fetchallvenues`, {
           credentials: "include",
         });
 
@@ -356,7 +356,7 @@ export default function SportsFinderApp({ noofuser, onlineUsers }: Props) {
   useEffect(() => {
     const fetchTeams = async () => {
       try {
-        const res = await fetch("https://hustlehive.onrender.com/fetch-teams", {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/fetch-teams`, {
           credentials: "include",
         });
 

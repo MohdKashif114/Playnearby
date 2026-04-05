@@ -63,8 +63,8 @@ const Notifications = () => {
     const fetchNotifications = async () => {
       try {
         const [frRes, tiRes] = await Promise.all([
-          fetch("https://hustlehive.onrender.com/incoming-request", { credentials: "include" }),
-          fetch("https://hustlehive.onrender.com/pending-teaminvites", { credentials: "include" }),
+          fetch("${import.meta.env.VITE_API_URL}/incoming-request", { credentials: "include" }),
+          fetch("${import.meta.env.VITE_API_URL}/pending-teaminvites", { credentials: "include" }),
         ]);
         const [frData, tiData]: [FriendRequest[], TeamInvitation[]] = await Promise.all([
           frRes.json(),
@@ -84,7 +84,7 @@ const Notifications = () => {
   const acceptFriend = async (id: string) => {
     setActionLoading(id);
     try {
-      await fetch(`https://hustlehive.onrender.com/accept/${id}`, { method: "POST", credentials: "include" });
+      await fetch(`${import.meta.env.VITE_API_URL}/accept/${id}`, { method: "POST", credentials: "include" });
       setFriendRequests((prev) => prev.filter((r) => r._id !== id));
     } catch (err) {
       console.error("Can't accept friend request", err);
@@ -96,7 +96,7 @@ const Notifications = () => {
   const rejectFriend = async (id: string) => {
     setActionLoading(id + "-reject");
     try {
-      await fetch(`https://hustlehive.onrender.com/reject/${id}`, { method: "POST", credentials: "include" });
+      await fetch(`${import.meta.env.VITE_API_URL}/reject/${id}`, { method: "POST", credentials: "include" });
       setFriendRequests((prev) => prev.filter((r) => r._id !== id));
     } catch (err) {
       console.error("Can't reject friend request", err);
@@ -108,7 +108,7 @@ const Notifications = () => {
   const acceptTeamInvite = async (id: string, teamId: string) => {
     setActionLoading(id);
     try {
-      await fetch(`https://hustlehive.onrender.com/team-invite/accept/${id}`, { credentials: "include" });
+      await fetch(`${import.meta.env.VITE_API_URL}/team-invite/accept/${id}`, { credentials: "include" });
       socket.emit("join-team", teamId);
       setTeamInvites((prev) => prev.filter((i) => i._id !== id));
       setCurrentTeam(teamId);

@@ -48,9 +48,10 @@ function App() {
 
 
         useEffect(() => {
+          console.log(`env is ${import.meta.env.VITE_API_URL}`)
             const fetchUser = async () => {
               try {
-                const res = await fetch("https://hustlehive.onrender.com/authenticate", {
+                const res = await fetch(`${import.meta.env.VITE_API_URL}/authenticate`, {
                   credentials: "include",
                 });
 
@@ -88,7 +89,7 @@ function App() {
           useEffect(()=>{
               const fetchfriends=async()=>{
                 try{
-                  const res=await fetch("https://hustlehive.onrender.com/my-friends",{
+                  const res=await fetch(`${import.meta.env.VITE_API_URL}/my-friends`,{
                     credentials:"include"
                   });
                   
@@ -179,7 +180,7 @@ function App() {
 
   const logouthandler=async()=>{
     try{
-      const res=await fetch("https://hustlehive.onrender.com/auth/logout",{
+      const res=await fetch(`${import.meta.env.VITE_API_URL}/auth/logout`,{
          credentials: "include",
             method:"POST",
       });

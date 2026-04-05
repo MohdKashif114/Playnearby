@@ -128,7 +128,7 @@ const setlocationhandler=async()=>{
         }
 
         console.log("the area of user is ",areacityName);
-        const res=await fetch("https://hustlehive.onrender.com/setlocation",{
+        const res=await fetch(`${import.meta.env.VITE_API_URL}/setlocation`,{
             credentials: "include",
             method:"POST",
             headers: {
