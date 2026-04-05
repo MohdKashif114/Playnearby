@@ -39,6 +39,7 @@ export const io = new Server(server, {
     origin: [
       "http://localhost:5173",
       "https://admin.socket.io",
+      "https://hustlehive-alpha.vercel.app"
     ],
     credentials: true,
   },
@@ -52,6 +53,7 @@ instrument(io, {
 setupPresence(io);
 app.use(cors({
   origin: ["http://localhost:5173",
+    "https://hustlehive-alpha.vercel.app",
     "https://admin.socket.io"],
     credentials: true
   }));
