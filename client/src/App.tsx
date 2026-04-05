@@ -50,7 +50,7 @@ function App() {
         useEffect(() => {
             const fetchUser = async () => {
               try {
-                const res = await fetch("http://localhost:5000/authenticate", {
+                const res = await fetch("https://hustlehive.onrender.com/authenticate", {
                   credentials: "include",
                 });
 
@@ -88,7 +88,7 @@ function App() {
           useEffect(()=>{
               const fetchfriends=async()=>{
                 try{
-                  const res=await fetch("http://localhost:5000/my-friends",{
+                  const res=await fetch("https://hustlehive.onrender.com/my-friends",{
                     credentials:"include"
                   });
                   
@@ -179,7 +179,7 @@ function App() {
 
   const logouthandler=async()=>{
     try{
-      const res=await fetch("http://localhost:5000/auth/logout",{
+      const res=await fetch("https://hustlehive.onrender.com/auth/logout",{
          credentials: "include",
             method:"POST",
       });

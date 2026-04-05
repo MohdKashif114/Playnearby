@@ -41,7 +41,7 @@ export default function ChatWindow({ friend }: ChatWindowProps) {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/private-message/${friend._id}`, { credentials: "include" });
+        const res = await fetch(`https://hustlehive.onrender.com/private-message/${friend._id}`, { credentials: "include" });
         if (!res.ok) throw new Error("cant fetch");
         const data = await res.json();
         setMessages(data);

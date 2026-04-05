@@ -19,7 +19,7 @@ export default function Signup(){
     const onSignup=async(name:string,email:string,password:string)=>{
         console.log("signing in....",name);
         try {
-            const res = await fetch("http://localhost:5000/auth/signup", {
+            const res = await fetch("https://hustlehive.onrender.com/auth/signup", {
             credentials: "include",
             method:"POST",
             headers: {

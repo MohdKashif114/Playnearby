@@ -128,7 +128,7 @@ const setlocationhandler=async()=>{
         }
 
         console.log("the area of user is ",areacityName);
-        const res=await fetch("http://localhost:5000/setlocation",{
+        const res=await fetch("https://hustlehive.onrender.com/setlocation",{
             credentials: "include",
             method:"POST",
             headers: {
