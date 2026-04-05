@@ -1,15 +1,9 @@
 import Card from './Card';
 import type { Player, Team, Venue } from '../types';
-import { Users, MapPin, Plus, Menu, X } from 'lucide-react';
-import { useEffect } from 'react';
-import {socket} from "../socket/socket"
+import { Plus } from 'lucide-react';
+
 import { useAuth } from '../Auth/AuthProvider';
-import MapView from './MapView';
-import VenueMarkers from './VenueMarkers';
-import { dummyVenues } from '../data/locations';
-import { NavLink ,Link} from 'react-router-dom';
-import { Button } from "@/components/ui/button"
-import { RetroGrid } from "@/components/ui/retro-grid"
+
 
 type CardItem = Player | Team | Venue;
 
@@ -25,15 +19,13 @@ interface CardGridProps {
 
 }
 
-const isTeam = (i: CardItem): i is Team => {
-  return "members" in i && "maxPlayers" in i;
-};
 
 
 
 
 
-export default function CardGrid({ items,noofuser,onlineUsers,onAddClick,type,jointeamhandler,exitteamhandler,updateVenueImages}: CardGridProps) {
+
+export default function CardGrid({ items,onlineUsers,onAddClick,type,jointeamhandler,exitteamhandler,updateVenueImages}: CardGridProps) {
 
 
 

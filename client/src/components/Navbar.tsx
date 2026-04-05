@@ -12,7 +12,6 @@ interface NavbarProps {
 
 export default function Navbar({
   title = "Sports Connect",
-  loggedin,
   logouthandler,
   noofusers,
 }: NavbarProps) {

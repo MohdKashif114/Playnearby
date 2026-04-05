@@ -1,20 +1,17 @@
-import { useEffect, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../Auth/AuthProvider";
 
 
 
-interface LoginProps {
-  onLogin: (email: string, password: string) => void;
-  onSwitchToSignup: () => void;
-}
+
 
 export default function Login(){
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate=useNavigate();
 
-  const {user,setUser}=useAuth();
+  const {setUser}=useAuth();
 
 
      

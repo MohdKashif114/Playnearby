@@ -1,4 +1,4 @@
-import { Users, MapPin, Plus, Menu, X } from 'lucide-react';
+import {  Menu, X } from 'lucide-react';
 import type { TabType } from '../types';
 import { NavLink } from "react-router-dom";
 import { RiTeamFill } from "react-icons/ri";
@@ -16,11 +16,11 @@ interface SidebarProps {
 }
 
 export default function Sidebar({
-  activeTab,
-  setActiveTab,
+  
+  
   sidebarOpen,
   setSidebarOpen,
-  onAddClick,
+
 }: SidebarProps) {
   const linkBase =
     "flex items-center px-3 py-2 rounded-lg transition-all duration-300 ease-in-out transform";

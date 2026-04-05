@@ -1,20 +1,11 @@
 
 import { MapContainer,TileLayer,Marker, useMap } from "react-leaflet";
 import { useAuth } from "../Auth/AuthProvider";
-import type { LeafletMouseEvent } from 'leaflet';
+
 import LocationPicker from "./LocationPicker";
 import { useEffect } from "react";
-import type {Team} from "../types/index"
 
-interface userT{
-  name:string;
-  id:string;
-  sport:string;
-  location?:{
-    lat:number;
-    lng:number;
-  };
-}
+
 
 
 
@@ -47,22 +38,22 @@ function MapCenterer({ lat, lng }: MapCentererProps) {
 
 export default function SetTeamLocation({onchange}:setlocationProp){
 
-    const {setUser,user}=useAuth();
+    const {user}=useAuth();
     
 
-const useCurrentLocation = () => {
-  navigator.geolocation.getCurrentPosition(
+// const useCurrentLocation = () => {
+//   navigator.geolocation.getCurrentPosition(
 
-    (pos) => {
-        console.log("current location is:",pos.coords.latitude,"and",pos.coords.longitude);
+//     (pos) => {
+//         console.log("current location is:",pos.coords.latitude,"and",pos.coords.longitude);
         
-      onchange(pos.coords.latitude,pos.coords.longitude);
-    },
-    () => {
-      alert("Location permission denied");
-    }
-  );
-};
+//       onchange(pos.coords.latitude,pos.coords.longitude);
+//     },
+//     () => {
+//       alert("Location permission denied");
+//     }
+//   );
+// };
 
 
 

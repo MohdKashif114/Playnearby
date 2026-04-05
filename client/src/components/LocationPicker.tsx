@@ -1,4 +1,4 @@
-import { Marker, useMapEvents } from "react-leaflet";
+import { useMapEvents } from "react-leaflet";
 import type { LeafletMouseEvent } from "leaflet";
 
 interface LocationPickerProps {

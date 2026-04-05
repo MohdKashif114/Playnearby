@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { socket } from "../socket/socket";
 import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
-import { CiCirclePlus } from "react-icons/ci";
+
 // import { Button } from "./ui/button";
 import { Button } from "@/components/ui/button"
 import { Spinner } from "./ui/spinner";
@@ -13,7 +13,6 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,

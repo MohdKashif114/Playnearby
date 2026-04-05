@@ -3,9 +3,8 @@ import Sidebar from "./Sidebar";
 import TopBar from "./TopBar";
 import CardGrid from "./CardGrid";
 import AddModal from "./AddModal";
-import Navbar from "./Navbar";
 import { socket } from "../socket/socket";
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import TeamDetails from "./TeamDetails";
 import TeamChat from "./TeamChat";
 import OnMap from "./OnMap";
@@ -35,8 +34,8 @@ export default function SportsFinderApp({ noofuser, onlineUsers }: Props) {
   const [selectedLocation, setSelectedLocation] = useState("all");
   const [showAddModal, setShowAddModal] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { currentTeam, setCurrentTeam } = useAuth();
-  const navigate = useNavigate();
+  const { setCurrentTeam } = useAuth();
+  
   const { user } = useAuth();
   const location = useLocation();
   const [radius, setRadius] = useState<number>(5);
@@ -449,7 +448,7 @@ export default function SportsFinderApp({ noofuser, onlineUsers }: Props) {
               setSelectedSport={setSelectedSport}
               selectedLocation={selectedLocation}
               setSelectedLocation={setSelectedLocation}
-              filterdata={filteredData}
+              // filterdata={filteredData}
               fetchNearbyVenues={fetchNearbyVenues}
               fetchNearbyPlayers={fetchNearbyPlayers}
               setRadius={setRadius}

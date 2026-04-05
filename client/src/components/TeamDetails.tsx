@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import type { Player, Team, Venue } from "../types";
+import type {Team } from "../types";
 import { MapPin, Users, MessageCircle, Shield, ChevronRight, Trophy, Swords } from "lucide-react";
 
 interface TeamDetailsProps {

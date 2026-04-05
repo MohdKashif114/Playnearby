@@ -1,10 +1,10 @@
 
 import { MapContainer,TileLayer,Marker, useMap } from "react-leaflet";
 import { useAuth } from "../Auth/AuthProvider";
-import type { LeafletMouseEvent } from 'leaflet';
+
 import LocationPicker from "./LocationPicker";
 import { useEffect } from "react";
-import type {Team} from "../types/index"
+
 import { useNavigate } from "react-router-dom";
 
 interface userT{
@@ -24,9 +24,7 @@ interface MapCentererProps {
   lng: number | null;
   
 }
-interface setlocationProp{
-  type:string;
-}
+
 
 function MapCenterer({ lat, lng }: MapCentererProps) {
   const map = useMap();
@@ -45,7 +43,7 @@ function MapCenterer({ lat, lng }: MapCentererProps) {
 
 
 
-export default function SetLocation({type}:setlocationProp){
+export default function SetLocation(){
   
   const navigate=useNavigate();
     const {setUser,user}=useAuth();

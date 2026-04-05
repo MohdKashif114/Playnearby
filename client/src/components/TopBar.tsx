@@ -25,9 +25,7 @@ interface TopBarProps {
   setRadius: (val: number) => void;
 }
 
-/* ───────────────────────────── */
-/* Label */
-/* ───────────────────────────── */
+
 function FilterLabel({
   icon,
   children,
@@ -43,9 +41,7 @@ function FilterLabel({
   );
 }
 
-/* ───────────────────────────── */
-/* Shared Styles */
-/* ───────────────────────────── */
+
 
 const triggerClass =
   "h-9 rounded-xl text-sm text-gray-300 " +
@@ -60,9 +56,7 @@ const contentClass =
   "border border-gray-800 rounded-xl " +
   "text-gray-300 text-sm shadow-2xl shadow-black/60";
 
-/* ───────────────────────────── */
-/* TopBar */
-/* ───────────────────────────── */
+
 
 export default function TopBar({
   activeTab,

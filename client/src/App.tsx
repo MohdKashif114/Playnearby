@@ -7,19 +7,18 @@ import SetLocation from './components/SetLocation';
 import { useState,useEffect } from 'react';
 import {socket} from "./socket/socket"
 import Navbar from './components/Navbar';
-import {Routes,Route, useNavigate} from "react-router-dom"
+import {Routes,Route} from "react-router-dom"
 // import { Sign } from 'crypto';
 import Signup from "./components/Signup"
 import Login from './components/Login';
-import { AuthProvider, useAuth } from './Auth/AuthProvider';
+import {  useAuth } from './Auth/AuthProvider';
 import ProtectedRoute from "./routes/ProtectedRoute"
 import 'leaflet/dist/leaflet.css';
 import Notifications from './components/Notifications';
 import PrivateChat from './components/PrivateChat';
 import Profile from './components/Profile';
 import { Toaster } from "@/components/ui/sonner";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { AppSidebar } from "@/components/app-sidebar"
+
 import { Dashboard } from './components/Dashboard';
 
 
@@ -35,15 +34,15 @@ import { Dashboard } from './components/Dashboard';
 
 function App() {
   
-    const [loggedin,setloggedin] = useState<boolean>(false);
-    const [userid,setuserid]=useState<string>("");
-    const navigate=useNavigate();
+    const [loggedin] = useState<boolean>(false);
+    
+    
     const [noofusers,setNoofuser]=useState<number>(0);
     const [onlineUsers, setOnlineUsers] = useState<Set<string>>(new Set());
 
 
-    const {user,setUser,setCurrentTeam,currentTeam,friends,setFriends,setFriendRequests,friendRequests,
-            teamInvites,setTeamInvites }=useAuth();
+    const {user,setUser,setCurrentTeam,currentTeam,setFriends,setFriendRequests,
+            setTeamInvites }=useAuth();
 
 
 
@@ -247,7 +246,7 @@ function App() {
           <Route path='/set-location'
             element={
               <ProtectedRoute>
-                  <SetLocation type="Player"/>
+                  <SetLocation/>
               </ProtectedRoute>
             }
           />

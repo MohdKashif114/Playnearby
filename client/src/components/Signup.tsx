@@ -3,17 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../Auth/AuthProvider";
 
 
-interface SignupProps {
-  onSignup: (name: string, email: string, password: string) => void;
-  onSwitchToLogin: () => void;
-}
+
 
 export default function Signup(){
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const {user,setUser}=useAuth();
+  const {setUser}=useAuth();
   const navigate=useNavigate();
 
     const onSignup=async(name:string,email:string,password:string)=>{

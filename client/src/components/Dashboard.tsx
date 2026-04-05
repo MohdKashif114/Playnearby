@@ -10,9 +10,7 @@ import {
 } from "lucide-react";
 import { BentoCard, BentoGrid } from "@/components/ui/bento-grid";
 
-// ─────────────────────────────────────────────────────────────
-// Scroll Progress
-// ─────────────────────────────────────────────────────────────
+
 function ScrollProgress() {
   const [progress, setProgress] = useState(0);
 
@@ -37,9 +35,7 @@ function ScrollProgress() {
   );
 }
 
-// ─────────────────────────────────────────────────────────────
-// Reveal Animation
-// ─────────────────────────────────────────────────────────────
+
 function useReveal(threshold = 0.15) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
