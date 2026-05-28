@@ -42,7 +42,7 @@ export default function Navbar({
       <div className="flex items-center gap-4 sm:gap-8">
         
         {/* Chat */}
-        <button
+        {user && <button
           onClick={() => navigate("/private-chats")}
           className="text-gray-400 hover:text-indigo-400 transition-colors flex items-center gap-1.5"
           title="Chat"
@@ -50,26 +50,26 @@ export default function Navbar({
           <MessageSquare size={20} />
           <span className="hidden sm:inline text-sm">Chat</span>
         </button>
-
+        }
         {/* Notifications */}
-        <button
+        {user && <button
           onClick={() => navigate("/notifications")}
           className="text-gray-400 hover:text-indigo-400 transition-colors"
           title="Notifications"
         >
           <Bell size={20} />
         </button>
-
+        }
         {/* Profile */}
-        <button
+        {user&&<button
           onClick={() => navigate("/profile")}
           className="text-gray-400 hover:text-indigo-400 transition-colors"
           title="Profile"
         >
           <User size={20} />
         </button>
-
-        {/* Auth Section */}
+        }
+        
         {user ? (
           <button
             onClick={logouthandler}
