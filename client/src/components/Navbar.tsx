@@ -26,7 +26,7 @@ export default function Navbar({
         
         {/* Logo / Title */}
         <h1
-          className="text-sm sm:text-lg font-bold text-gray-100 cursor-pointer hover:text-indigo-400 transition-colors truncate max-w-[120px] xs:max-w-none"
+          className="text-sm sm:text-lg font-bold text-gray-100 cursor-pointer hover:text-indigo-400 transition-colors truncate  xs:max-w-none"
           onClick={() => navigate("/mainpage")}
         >
           {title}

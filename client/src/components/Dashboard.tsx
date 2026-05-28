@@ -1,15 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { MarqueeDemo } from "./MarqueeDemo";
-import {
-  Users,
-  MapPin,
-  Shield,
-  Trophy,
-  Zap,
-  Star,
-} from "lucide-react";
+import { Users, MapPin, Shield, Trophy, Zap, Star } from "lucide-react";
 import { BentoCard, BentoGrid } from "@/components/ui/bento-grid";
-
+import { RetroGrid } from "@/components/ui/retro-grid";
 
 function ScrollProgress() {
   const [progress, setProgress] = useState(0);
@@ -34,7 +27,6 @@ function ScrollProgress() {
     </div>
   );
 }
-
 
 function useReveal(threshold = 0.15) {
   const ref = useRef<HTMLDivElement>(null);
@@ -87,9 +79,6 @@ function Reveal({
   );
 }
 
-// ─────────────────────────────────────────────────────────────
-// Stat Card
-// ─────────────────────────────────────────────────────────────
 function StatCard({
   icon,
   label,
@@ -105,11 +94,11 @@ function StatCard({
 }) {
   return (
     <Reveal delay={delay}>
-      <div
-        className="relative rounded-2xl border border-gray-800 bg-[#11161D] p-5 hover:-translate-y-1 hover:shadow-xl hover:border-indigo-500/40 transition-all duration-300 group"
-      >
+      <div className="relative rounded-2xl border border-gray-800/80 bg-[#11161D]/40 backdrop-blur-md p-6 hover:-translate-y-1 hover:shadow-[0_0_25px_-5px_rgba(99,102,241,0.2)] hover:border-indigo-500/40 transition-all duration-300 group overflow-hidden">
+        {/* Glow effect on hover */}
+        <div className="absolute -inset-px bg-gradient-to-br from-indigo-500/10 to-purple-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl" />
         <div
-          className="w-9 h-9 rounded-xl flex items-center justify-center mb-3 border"
+          className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 border relative z-10 transition-transform duration-300 group-hover:scale-110"
           style={{
             background: `${color}15`,
             borderColor: `${color}30`,
@@ -118,9 +107,8 @@ function StatCard({
         >
           {icon}
         </div>
-
-        <p className="text-2xl font-bold text-gray-100">{value}</p>
-        <p className="text-xs text-gray-500 mt-1 uppercase tracking-wider">
+        <p className="text-3xl font-extrabold text-white tracking-tight relative z-10">{value}</p>
+        <p className="text-xs text-gray-400 font-semibold mt-1.5 uppercase tracking-wider relative z-10">
           {label}
         </p>
       </div>
@@ -128,9 +116,6 @@ function StatCard({
   );
 }
 
-// ─────────────────────────────────────────────────────────────
-// Section Heading
-// ─────────────────────────────────────────────────────────────
 function SectionHeading({
   children,
   sub,
@@ -140,53 +125,49 @@ function SectionHeading({
 }) {
   return (
     <Reveal>
-      <div className="mb-8">
-        <h2 className="text-xl font-bold text-gray-100 tracking-tight">
+      <div className="mb-10">
+        <h2 className="text-2xl font-extrabold text-white tracking-tight sm:text-3xl">
           {children}
         </h2>
-        {sub && <p className="text-sm text-gray-500 mt-1">{sub}</p>}
+        {sub && <p className="text-sm text-indigo-400/80 font-medium mt-2">{sub}</p>}
       </div>
     </Reveal>
   );
 }
 
-// ─────────────────────────────────────────────────────────────
-// Dashboard
-// ─────────────────────────────────────────────────────────────
 export function Dashboard() {
   return (
-    <div className="min-h-screen bg-[#0B0F14] text-gray-100 font-sans">
+    <div className="min-h-screen bg-[#0B0F14] text-gray-100 font-sans relative overflow-hidden">
       <ScrollProgress />
 
       {/* ── HERO ── */}
-      <div
-        className="relative border-b border-gray-800"
-        style={{
-          background:
-            "radial-gradient(circle at 30% 20%, #1E293B 0%, #0B0F14 60%)",
-        }}
-      >
-        <div className="max-w-5xl mx-auto px-6 pt-20 pb-14">
+      <div className="relative border-b border-gray-800/80 bg-[#0F141B]/40 py-24 md:py-32 overflow-hidden">
+        {/* Radial glow background */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(99,102,241,0.15),transparent_55%)] pointer-events-none" />
+
+        {/* Interactive Retro Grid */}
+        <RetroGrid opacity={0.25} darkLineColor="#312E81" lightLineColor="#312E81" />
+
+        <div className="relative z-10 max-w-5xl mx-auto px-6">
           <Reveal>
-            <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 rounded-full px-3 py-1 mb-6">
-              <Zap className="w-3 h-3" /> Dashboard
+            <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 rounded-full px-3.5 py-1.5 mb-6">
+              <Zap className="w-3.5 h-3.5 animate-pulse" /> Playnearby Hub
             </div>
           </Reveal>
 
           <Reveal delay={80}>
-            <h1 className="text-4xl md:text-5xl font-bold leading-tight max-w-xl">
+            <h1 className="text-4xl md:text-6xl font-extrabold leading-tight tracking-tight max-w-2xl text-white">
               Find players,
               <br />
-              <span className="text-indigo-400">
+              <span className="bg-gradient-to-r from-indigo-400 via-violet-400 to-purple-500 bg-clip-text text-transparent drop-shadow-sm">
                 build your team.
               </span>
             </h1>
           </Reveal>
 
           <Reveal delay={160}>
-            <p className="text-gray-500 mt-4 max-w-md text-sm leading-relaxed">
-              Connect with athletes near you, join teams, and discover the best
-              venues in your area.
+            <p className="text-gray-400 mt-6 max-w-lg text-sm md:text-base leading-relaxed">
+              Connect with athletes near you in real-time, organize matches, and find the perfect venues to play.
             </p>
           </Reveal>
         </div>
@@ -235,7 +216,7 @@ export function Dashboard() {
             Active Near You
           </SectionHeading>
           <Reveal delay={60}>
-            <div className="rounded-2xl overflow-hidden border border-gray-800 bg-[#11161D]">
+            <div className="rounded-2xl overflow-hidden border border-gray-800 bg-[#11161D]/20 backdrop-blur-md">
               <MarqueeDemo />
             </div>
           </Reveal>
@@ -246,7 +227,6 @@ export function Dashboard() {
           <SectionHeading sub="Everything you need to get started">
             Explore
           </SectionHeading>
-
           <Reveal delay={60}>
             <BentoGrid>
               <BentoCard
@@ -255,7 +235,7 @@ export function Dashboard() {
                 description="Browse and connect with players near you"
                 href="/mainpage/players"
                 cta="Find Players"
-                background={<div className="absolute inset-0 bg-indigo-900/20 rounded-xl" />}
+                background={<div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(99,102,241,0.15),transparent_50%)]" />}
                 Icon={Users}
               />
               <BentoCard
@@ -264,7 +244,7 @@ export function Dashboard() {
                 description="Join or create a team"
                 href="/mainpage/teams"
                 cta="Browse Teams"
-                background={<div className="absolute inset-0 bg-indigo-900/20 rounded-xl" />}
+                background={<div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(16,185,129,0.15),transparent_50%)]" />}
                 Icon={Shield}
               />
               <BentoCard
@@ -273,7 +253,7 @@ export function Dashboard() {
                 description="Discover sports venues near you"
                 href="/mainpage/venues"
                 cta="Find Venues"
-                background={<div className="absolute inset-0 bg-indigo-900/20 rounded-xl" />}
+                background={<div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(139,92,246,0.15),transparent_50%)]" />}
                 Icon={MapPin}
               />
               <BentoCard
@@ -282,7 +262,7 @@ export function Dashboard() {
                 description="See who's topping the charts this week"
                 href="/mainpage/leaderboard"
                 cta="View Rankings"
-                background={<div className="absolute inset-0 bg-amber-900/20 rounded-xl" />}
+                background={<div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(245,158,11,0.15),transparent_50%)]" />}
                 Icon={Trophy}
               />
             </BentoGrid>
@@ -294,7 +274,6 @@ export function Dashboard() {
           <SectionHeading sub="What's happening right now">
             Live Activity
           </SectionHeading>
-
           <div className="space-y-3">
             {[
               { icon: <Users size={14} />, text: "3 new players joined in your area", time: "2m ago" },
@@ -303,14 +282,14 @@ export function Dashboard() {
               { icon: <Star size={14} />, text: "You received a team invitation", time: "1h ago" },
             ].map((item, i) => (
               <Reveal key={i} delay={i * 60}>
-                <div className="flex items-center gap-3 px-4 py-3 rounded-xl border border-gray-800 bg-[#11161D] hover:bg-indigo-500/5 hover:border-indigo-500/30 transition-all">
-                  <div className="w-7 h-7 rounded-lg flex items-center justify-center border bg-indigo-500/10 border-indigo-500/20 text-indigo-400">
+                <div className="flex items-center gap-4 px-5 py-4 rounded-xl border border-gray-800 bg-[#11161D]/40 backdrop-blur-md hover:bg-indigo-500/[0.03] hover:border-indigo-500/30 transition-all duration-300 group">
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center border bg-indigo-500/10 border-indigo-500/20 text-indigo-400 group-hover:scale-105 transition-transform duration-300">
                     {item.icon}
                   </div>
-                  <p className="flex-1 text-sm text-gray-400">
+                  <p className="flex-1 text-sm text-gray-200 group-hover:text-white transition-colors">
                     {item.text}
                   </p>
-                  <span className="text-xs text-gray-600">
+                  <span className="text-xs text-gray-500 font-medium">
                     {item.time}
                   </span>
                 </div>
