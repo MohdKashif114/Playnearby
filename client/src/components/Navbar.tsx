@@ -33,7 +33,7 @@ export default function Navbar({
         </h1>
 
         {/* Online Badge */}
-        <Badge className="hidden xs:inline-flex bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-medium tracking-wide">
+        <Badge className="inline-flex bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-medium tracking-wide">
           Online: {noofusers}
         </Badge>
       </div>
