@@ -1,11 +1,10 @@
 
-import { MapContainer,TileLayer,Marker, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
 import { useAuth } from "../Auth/AuthProvider";
-
 import LocationPicker from "./LocationPicker";
 import { useEffect } from "react";
-
 import { useNavigate } from "react-router-dom";
+import { MapPin, Navigation, Check } from "lucide-react";
 
 interface userT{
   name:string;
@@ -164,35 +163,49 @@ const setlocationhandler=async()=>{
 
 
     
-    return(
-        <div>
-            <h1>Set Location</h1>
+    return (
+      <div className="min-h-[calc(100vh-5rem)] bg-[#0B0F14] flex items-center justify-center p-4 sm:p-8 relative">
+        {/* Subtle decorative background glow blobs */}
+        <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="w-full max-w-2xl rounded-3xl border border-gray-800 bg-[#11161D]/80 backdrop-blur-xl p-6 sm:p-8 shadow-2xl relative">
+          <div className="flex flex-col items-center mb-6">
+            <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-3 text-indigo-400">
+              <MapPin size={24} />
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-black text-white text-center tracking-tight">
+              Set Your Location
+            </h1>
+            <p className="text-gray-500 text-xs sm:text-sm text-center mt-2 max-w-md">
+              Pin your location on the map to find active sports partners, team matches, and venues near you.
+            </p>
+          </div>
+
+          <div className="h-80 w-full rounded-2xl overflow-hidden border border-gray-800 shadow-inner relative z-0">
             <MapContainer
-                center={[28.6139, 77.2090]}
-                zoom={13}
-                style={{ height: "300px" }}
-                >
-                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                
-                <MapCenterer lat={user.location?.lat??null} lng={user.location?.lng??null}/>
+              center={[28.6139, 77.2090]}
+              zoom={13}
+              style={{ height: "100%", width: "100%" }}
+            >
+              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+              
+              <MapCenterer lat={user.location?.lat??null} lng={user.location?.lng??null}/>
 
-
-                <LocationPicker
-                    onSelect={(lat, lng) => {
-                        console.log("Setting locaiont to ",lat,"and",lng);
-                        
-                                setUser((prev:userT) =>
-                                prev
-                                ? {
-                                    ...prev,
-                                    location: { lat, lng },
-                                    }
-                                : prev
-                            );
+              <LocationPicker
+                onSelect={(lat, lng) => {
+                  console.log("Setting location to ", lat, "and", lng);
+                  setUser((prev: any) =>
+                    prev
+                      ? {
+                          ...prev,
+                          location: { lat, lng },
                         }
-                        
-                      }
-                />
+                      : prev
+                  );
+                }}
+              />
+
               {user?.location &&
                 typeof user.location.lat === "number" &&
                 typeof user.location.lng === "number" && (
@@ -203,17 +216,29 @@ const setlocationhandler=async()=>{
                     ]}
                   />
                 )}
+            </MapContainer>
+          </div>
 
-                </MapContainer>
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-6">
+            <button
+              onClick={useCurrentLocation}
+              className="flex-1 py-3 px-4 rounded-xl border border-indigo-500/20 text-indigo-400 font-semibold text-sm hover:bg-indigo-500/10 hover:border-indigo-500/45 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <Navigation size={16} />
+              Use Current Location
+            </button>
 
-                <button onClick={useCurrentLocation}>Use Current Location</button>
-                {
-                    user?.location && (
-                        <button onClick={setlocationhandler}>
-                            Confirm location
-                        </button>
-                    ) 
-                }
+            {user?.location && (
+              <button
+                onClick={setlocationhandler}
+                className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-semibold text-sm shadow-lg shadow-indigo-500/25 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <Check size={16} />
+                Confirm Location
+              </button>
+            )}
+          </div>
         </div>
+      </div>
     );
 }

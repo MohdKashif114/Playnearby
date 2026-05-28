@@ -63,8 +63,8 @@ const Notifications = () => {
     const fetchNotifications = async () => {
       try {
         const [frRes, tiRes] = await Promise.all([
-          fetch("${import.meta.env.VITE_API_URL}/incoming-request", { credentials: "include" }),
-          fetch("${import.meta.env.VITE_API_URL}/pending-teaminvites", { credentials: "include" }),
+          fetch(`${import.meta.env.VITE_API_URL}/incoming-request`, { credentials: "include" }),
+          fetch(`${import.meta.env.VITE_API_URL}/pending-teaminvites`, { credentials: "include" }),
         ]);
         const [frData, tiData]: [FriendRequest[], TeamInvitation[]] = await Promise.all([
           frRes.json(),
@@ -123,122 +123,128 @@ const Notifications = () => {
   const total = friendRequests.length + teamInvites.length;
 
   return (
-    <div
-      className="w-96 rounded-2xl overflow-hidden shadow-2xl border border-gray-800 h-screen"
-      style={{
-        background: "linear-gradient(160deg, #0f1117 0%, #131720 100%)",
-        fontFamily: "'DM Sans', sans-serif",
-      }}
-    >
-      {/* Header */}
-      <div className="px-5 py-4 border-b border-gray-800 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Bell className="w-4 h-4 text-violet-400" />
-          <h2 className="font-bold text-gray-100">Notifications</h2>
-        </div>
-        {total > 0 && (
-          <span className="text-xs bg-violet-500/15 text-violet-400 border border-violet-500/20 rounded-full px-2 py-0.5 font-semibold">
-            {total} new
-          </span>
-        )}
-      </div>
+    <div className="min-h-[calc(100vh-5rem)] bg-[#0B0F14] flex items-start justify-center p-4 sm:p-8 relative">
+      {/* Decorative background glows */}
+      <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-violet-600/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-indigo-600/5 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="max-h-[480px] overflow-y-auto">
-        {loading ? (
-          <div className="flex items-center justify-center py-16">
-            <Loader2 className="w-6 h-6 text-violet-400 animate-spin" />
+      <div
+        className="w-full max-w-md rounded-2xl overflow-hidden shadow-2xl border border-gray-800 relative z-10"
+        style={{
+          background: "linear-gradient(160deg, #0f1117 0%, #131720 100%)",
+          fontFamily: "'DM Sans', sans-serif",
+        }}
+      >
+        {/* Header */}
+        <div className="px-5 py-4 border-b border-gray-800 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Bell className="w-4 h-4 text-violet-400" />
+            <h2 className="font-bold text-gray-100">Notifications</h2>
           </div>
-        ) : total === 0 ? (
-          <Empty />
-        ) : (
-          <div className="p-3 space-y-1">
-            {/* ── Friend Requests ── */}
-            {friendRequests.length > 0 && (
-              <div>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-600 px-2 py-2 flex items-center gap-1.5">
-                  <UserPlus className="w-3 h-3 text-emerald-500/70" /> Friend Requests
-                </p>
-                <div className="space-y-1">
-                  {friendRequests.map((req) => (
-                    <div
-                      key={req._id}
-                      className="flex items-center gap-3 px-3 py-3 rounded-xl bg-gray-800/40 hover:bg-gray-800/70 border border-gray-700/40 hover:border-gray-700 transition-all group"
-                    >
-                      <Avatar name={req.sender.name} />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm text-gray-200 font-semibold truncate">{req.sender.name}</p>
-                        <p className="text-xs text-gray-500">wants to be your friend</p>
+          {total > 0 && (
+            <span className="text-xs bg-violet-500/15 text-violet-400 border border-violet-500/20 rounded-full px-2 py-0.5 font-semibold">
+              {total} new
+            </span>
+          )}
+        </div>
+
+        <div className="max-h-[480px] overflow-y-auto">
+          {loading ? (
+            <div className="flex items-center justify-center py-16">
+              <Loader2 className="w-6 h-6 text-violet-400 animate-spin" />
+            </div>
+          ) : total === 0 ? (
+            <Empty />
+          ) : (
+            <div className="p-3 space-y-1">
+              {/* ── Friend Requests ── */}
+              {friendRequests.length > 0 && (
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-gray-600 px-2 py-2 flex items-center gap-1.5">
+                    <UserPlus className="w-3 h-3 text-emerald-500/70" /> Friend Requests
+                  </p>
+                  <div className="space-y-1">
+                    {friendRequests.map((req) => (
+                      <div
+                        key={req._id}
+                        className="flex items-center gap-3 px-3 py-3 rounded-xl bg-gray-800/40 hover:bg-gray-800/70 border border-gray-700/40 hover:border-gray-700 transition-all group"
+                      >
+                        <Avatar name={req.sender.name} />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm text-gray-200 font-semibold truncate">{req.sender.name}</p>
+                          <p className="text-xs text-gray-500">wants to be your friend</p>
+                        </div>
+                        <div className="flex gap-1.5 flex-shrink-0">
+                          <button
+                            onClick={() => acceptFriend(req._id)}
+                            disabled={!!actionLoading}
+                            className="w-8 h-8 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-400 border border-emerald-500/20 flex items-center justify-center transition-colors disabled:opacity-40"
+                            title="Accept"
+                          >
+                            {actionLoading === req._id ? (
+                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                            ) : (
+                              <Check className="w-3.5 h-3.5" />
+                            )}
+                          </button>
+                          <button
+                            onClick={() => rejectFriend(req._id)}
+                            disabled={!!actionLoading}
+                            className="w-8 h-8 rounded-lg bg-red-600/10 hover:bg-red-600/30 text-red-400 border border-red-500/20 flex items-center justify-center transition-colors disabled:opacity-40"
+                            title="Reject"
+                          >
+                            {actionLoading === req._id + "-reject" ? (
+                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                            ) : (
+                              <X className="w-3.5 h-3.5" />
+                            )}
+                          </button>
+                        </div>
                       </div>
-                      <div className="flex gap-1.5 flex-shrink-0">
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* ── Team Invitations ── */}
+              {teamInvites.length > 0 && (
+                <div className={friendRequests.length > 0 ? "mt-3" : ""}>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-gray-600 px-2 py-2 flex items-center gap-1.5">
+                    <Shield className="w-3 h-3 text-violet-500/70" /> Team Invitations
+                  </p>
+                  <div className="space-y-1">
+                    {teamInvites.map((invite) => (
+                      <div
+                        key={invite._id}
+                        className="flex items-center gap-3 px-3 py-3 rounded-xl bg-gray-800/40 hover:bg-gray-800/70 border border-gray-700/40 hover:border-gray-700 transition-all"
+                      >
+                        <div className="w-9 h-9 rounded-xl bg-violet-600/20 border border-violet-500/20 flex-shrink-0 flex items-center justify-center">
+                          <Shield className="w-4 h-4 text-violet-400" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm text-gray-200 font-semibold truncate">{invite.team.name}</p>
+                          <p className="text-xs text-gray-500 truncate">invited by {invite.invitedBy.name}</p>
+                        </div>
                         <button
-                          onClick={() => acceptFriend(req._id)}
+                          onClick={() => acceptTeamInvite(invite._id, invite.team._id)}
                           disabled={!!actionLoading}
-                          className="w-8 h-8 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-400 border border-emerald-500/20 flex items-center justify-center transition-colors disabled:opacity-40"
-                          title="Accept"
+                          className="flex-shrink-0 text-xs font-semibold px-3 py-1.5 rounded-lg bg-violet-600/20 hover:bg-violet-600/40 text-violet-300 border border-violet-500/20 transition-colors disabled:opacity-40 flex items-center gap-1.5"
                         >
-                          {actionLoading === req._id ? (
-                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          {actionLoading === invite._id ? (
+                            <Loader2 className="w-3 h-3 animate-spin" />
                           ) : (
                             <Check className="w-3.5 h-3.5" />
                           )}
-                        </button>
-                        <button
-                          onClick={() => rejectFriend(req._id)}
-                          disabled={!!actionLoading}
-                          className="w-8 h-8 rounded-lg bg-red-600/10 hover:bg-red-600/30 text-red-400 border border-red-500/20 flex items-center justify-center transition-colors disabled:opacity-40"
-                          title="Reject"
-                        >
-                          {actionLoading === req._id + "-reject" ? (
-                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                          ) : (
-                            <X className="w-3.5 h-3.5" />
-                          )}
+                          Join
                         </button>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
-
-            {/* ── Team Invitations ── */}
-            {teamInvites.length > 0 && (
-              <div className={friendRequests.length > 0 ? "mt-3" : ""}>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-600 px-2 py-2 flex items-center gap-1.5">
-                  <Shield className="w-3 h-3 text-violet-500/70" /> Team Invitations
-                </p>
-                <div className="space-y-1">
-                  {teamInvites.map((invite) => (
-                    <div
-                      key={invite._id}
-                      className="flex items-center gap-3 px-3 py-3 rounded-xl bg-gray-800/40 hover:bg-gray-800/70 border border-gray-700/40 hover:border-gray-700 transition-all"
-                    >
-                      <div className="w-9 h-9 rounded-xl bg-violet-600/20 border border-violet-500/20 flex-shrink-0 flex items-center justify-center">
-                        <Shield className="w-4 h-4 text-violet-400" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm text-gray-200 font-semibold truncate">{invite.team.name}</p>
-                        <p className="text-xs text-gray-500 truncate">invited by {invite.invitedBy.name}</p>
-                      </div>
-                      <button
-                        onClick={() => acceptTeamInvite(invite._id, invite.team._id)}
-                        disabled={!!actionLoading}
-                        className="flex-shrink-0 text-xs font-semibold px-3 py-1.5 rounded-lg bg-violet-600/20 hover:bg-violet-600/40 text-violet-300 border border-violet-500/20 transition-colors disabled:opacity-40 flex items-center gap-1.5"
-                      >
-                        {actionLoading === invite._id ? (
-                          <Loader2 className="w-3 h-3 animate-spin" />
-                        ) : (
-                          <Check className="w-3 h-3" />
-                        )}
-                        Join
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

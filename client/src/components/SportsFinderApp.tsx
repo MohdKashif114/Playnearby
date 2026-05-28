@@ -307,10 +307,11 @@ export default function SportsFinderApp({ noofuser, onlineUsers }: Props) {
 
   useEffect(() => {
     const fetchplayers = async () => {
+      if (!user?.city) return;
       try {
-        console.log("in fetch player",user?.city);
+        console.log("in fetch player",user.city);
         const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/fetchallusers/${user?.city}`,
+          `${import.meta.env.VITE_API_URL}/fetchallusers/${user.city}`,
           {
             credentials: "include",
           },
@@ -427,7 +428,15 @@ export default function SportsFinderApp({ noofuser, onlineUsers }: Props) {
 
   return (
   
-      <div className=" bg-gray-900 flex overflow-hidden">
+      <div className=" bg-gray-900 flex overflow-hidden relative h-[calc(100vh-5rem)]">
+        {/* Backdrop for mobile drawer */}
+        {sidebarOpen && (
+          <div
+            className="md:hidden fixed inset-0 bg-black/60 z-30 transition-opacity backdrop-blur-sm"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+
         <Sidebar
           activeTab={activeTab}
           setActiveTab={setActiveTab}
@@ -435,6 +444,17 @@ export default function SportsFinderApp({ noofuser, onlineUsers }: Props) {
           setSidebarOpen={setSidebarOpen}
           onAddClick={() => setShowAddModal(true)}
         />
+
+        {/* Floating Menu Toggle Button for mobile when sidebar is closed */}
+        {!sidebarOpen && (
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="md:hidden fixed bottom-6 left-6 z-50 p-3.5 rounded-2xl bg-indigo-600 text-white shadow-lg hover:bg-indigo-500 transition-all border border-indigo-500/20 active:scale-95 flex items-center justify-center"
+            style={{ boxShadow: "0 8px 30px rgba(99, 102, 241, 0.4)" }}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg>
+          </button>
+        )}
 
         <div className="flex-1 flex flex-col min-w-0 ">
 

@@ -1,4 +1,4 @@
-import { Bell, User, LogOut, LogIn } from "lucide-react";
+import { Bell, User, LogOut, LogIn, MessageSquare } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../Auth/AuthProvider";
 import { Badge } from "@/components/ui/badge";
@@ -19,40 +19,43 @@ export default function Navbar({
   const { user } = useAuth();
 
   return (
-    <div className="h-20 bg-[#0F141B] border-b border-gray-800 px-8 flex items-center justify-between">
+    <div className="h-20 bg-[#0F141B] border-b border-gray-800 px-4 sm:px-8 flex items-center justify-between">
       
       {/* ───────── Left ───────── */}
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-4 sm:gap-6">
         
         {/* Logo / Title */}
         <h1
-          className="text-lg font-semibold text-gray-100 cursor-pointer hover:text-indigo-400 transition-colors"
+          className="text-sm sm:text-lg font-bold text-gray-100 cursor-pointer hover:text-indigo-400 transition-colors truncate max-w-[120px] xs:max-w-none"
           onClick={() => navigate("/mainpage")}
         >
           {title}
         </h1>
 
         {/* Online Badge */}
-        <Badge className="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-3 py-1 text-xs font-medium tracking-wide">
+        <Badge className="hidden xs:inline-flex bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-medium tracking-wide">
           Online: {noofusers}
         </Badge>
       </div>
 
       {/* ───────── Right ───────── */}
-      <div className="flex items-center gap-8">
+      <div className="flex items-center gap-4 sm:gap-8">
         
         {/* Chat */}
         <button
           onClick={() => navigate("/private-chats")}
-          className="text-sm text-gray-400 hover:text-indigo-400 transition-colors"
+          className="text-gray-400 hover:text-indigo-400 transition-colors flex items-center gap-1.5"
+          title="Chat"
         >
-          Chat
+          <MessageSquare size={20} />
+          <span className="hidden sm:inline text-sm">Chat</span>
         </button>
 
         {/* Notifications */}
         <button
           onClick={() => navigate("/notifications")}
           className="text-gray-400 hover:text-indigo-400 transition-colors"
+          title="Notifications"
         >
           <Bell size={20} />
         </button>
@@ -61,6 +64,7 @@ export default function Navbar({
         <button
           onClick={() => navigate("/profile")}
           className="text-gray-400 hover:text-indigo-400 transition-colors"
+          title="Profile"
         >
           <User size={20} />
         </button>
@@ -69,29 +73,31 @@ export default function Navbar({
         {user ? (
           <button
             onClick={logouthandler}
-            className="flex items-center gap-2 text-sm text-gray-400 hover:text-red-400 transition-colors"
+            className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-red-400 transition-colors"
+            title="Logout"
           >
             <LogOut size={18} />
-            Logout
+            <span className="hidden sm:inline">Logout</span>
           </button>
         ) : (
-          <div className="flex gap-4">
+          <div className="flex gap-2 sm:gap-4">
             
             {/* Login */}
             <button
               onClick={() => navigate("/login")}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-500 transition-all duration-200 shadow-md hover:shadow-indigo-500/20"
+              className="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-500 transition-all duration-200 shadow-md hover:shadow-indigo-500/20 text-xs sm:text-sm font-semibold"
             >
-              <LogIn size={18} />
-              Login
+              <LogIn size={16} />
+              <span className="hidden xs:inline">Login</span>
             </button>
 
             {/* Sign Up */}
             <button
               onClick={() => navigate("/signup")}
-              className="px-4 py-2 rounded-lg border border-indigo-500 text-indigo-400 hover:bg-indigo-500/10 transition-all duration-200"
+              className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg border border-indigo-500 text-indigo-400 hover:bg-indigo-500/10 transition-all duration-200 text-xs sm:text-sm font-semibold"
             >
-              Sign Up
+              <span className="hidden xs:inline">Sign Up</span>
+              <span className="xs:hidden">Join</span>
             </button>
           </div>
         )}

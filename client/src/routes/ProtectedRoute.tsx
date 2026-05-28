@@ -7,7 +7,8 @@ interface AuthProviderProps {
 }
 
 export default function ProtectedRoute({ children }:AuthProviderProps) {
-  const { user } = useAuth();
-    console.log("user is ...",user);
-  return user ? children : <Navigate to="/login" />;
+  const { user, loading } = useAuth();
+  console.log("user is ...",user);
+  if (loading) return null;
+  return user ? children : <Navigate to="/login" replace />;
 }

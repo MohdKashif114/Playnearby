@@ -38,8 +38,10 @@ export default function Sidebar({
   return (
     <div
       className={`${
-        sidebarOpen ? "w-64" : "w-20"
-      } bg-gradient-to-b from-gray-900 to-gray-800 transition-all duration-300 flex flex-col overflow-x-hidden`}
+        sidebarOpen 
+          ? "w-64 fixed inset-y-0 left-0 z-40 md:relative" 
+          : "w-0 hidden md:flex md:w-20"
+      } bg-gradient-to-b from-gray-900 to-gray-800 transition-all duration-300 flex flex-col overflow-x-hidden h-full`}
     >
       {/* Header */}
       <div className="p-4 border-b border-gray-700 flex justify-end overflow-x-hidden">

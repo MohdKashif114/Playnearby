@@ -33,16 +33,11 @@ import { Dashboard } from './components/Dashboard';
 
 
 function App() {
-  
-    const [loggedin] = useState<boolean>(false);
-    
-    
     const [noofusers,setNoofuser]=useState<number>(0);
     const [onlineUsers, setOnlineUsers] = useState<Set<string>>(new Set());
 
-
     const {user,setUser,setCurrentTeam,currentTeam,setFriends,setFriendRequests,
-            setTeamInvites }=useAuth();
+            setTeamInvites,loading,setLoading }=useAuth();
 
 
 
@@ -77,8 +72,10 @@ function App() {
                 // navigate("/mainpage");
                 
               } catch {
-                setUser({});
-              } 
+                setUser(null);
+              } finally {
+                setLoading(false);
+              }
             };
 
             fetchUser();
@@ -107,7 +104,7 @@ function App() {
 
     useEffect(() => {
       console.log("in socket function...", user);
-      if (user?.id=='') return;
+      if (!user || !user.id) return;
       const tempid=user.id;
       console.log(tempid);
       socket.auth = { user: {
@@ -224,11 +221,22 @@ function App() {
  
 
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#0f141b] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-10 h-10 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin" />
+          <p className="text-gray-500 text-sm font-medium">Loading Sports Connect...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className=" overflow-hidden">
       {/* <Navbar loggedin={loggedin}/> */}
       <Navbar
-              loggedin={loggedin}
+              loggedin={!!user}
               noofusers={noofusers}
               logouthandler={logouthandler}
               />
