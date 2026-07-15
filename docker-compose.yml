@@ -1,0 +1,35 @@
+services:
+  backend:
+    build:
+      context: ./server
+
+    container_name: playnearby-server
+
+    ports:
+      - "5000:5000"
+
+    env_file:
+      - ./server/.env
+
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+
+  frontend:
+    build:
+      context: ./client
+
+    container_name: playnearby-client
+
+    ports:
+      - "5173:5173"
+
+    env_file:
+      - ./client/.env.docker
+
+    depends_on:
+      - backend
+
+    volumes:
+      - ./client:/app
+      - /app/node_modules
