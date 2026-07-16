@@ -1,0 +1,70 @@
+services:
+  mongodb:
+    image: mongo:8
+
+    container_name: playnearby-mongodb
+
+    ports:
+      - "27017:27017"
+
+    volumes:
+      - mongo-data:/data/db
+
+  backend:
+    build:
+      context: ./server
+
+    container_name: playnearby-server
+
+    ports:
+      - "5000:5000"
+
+    env_file:
+      - ./server/.env.local
+
+    depends_on:
+      - mongodb
+
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+
+  frontend:
+    build:
+      context: ./client
+
+    container_name: playnearby-client
+
+    ports:
+      - "5173:5173"
+
+    env_file:
+      - ./client/.env.local
+
+    depends_on:
+      - backend
+
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+
+  mongo-express:
+    image: mongo-express
+
+    container_name: playnearby-mongo-express
+
+    restart: unless-stopped
+
+    ports:
+      - "8081:8081"
+
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: admin123
+
+    depends_on:
+      - mongodb
+
+volumes:
+  mongo-data:
